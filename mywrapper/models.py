@@ -9,13 +9,19 @@ class Subject(models.Model):
 	sectionID = models.CharField(max_length=20)
 	class Meta:
 		unique_together = ('subjectID', 'sectionID')
+	def __str__(self):
+		return '%s %s' % (self.subjectID, self.sectionID)
 
 class Student(models.Model):
 	studentID = models.CharField(unique=True,max_length=50)
+	def __str__(self):
+		return '%s' % (self.studentID)
 
 class SubjectsPerStudent(models.Model):
 	studentID = models.ForeignKey(Student)
 	subjectID = models.ForeignKey(Subject)
+	def __str__(self):
+		return '%s %s' % (self.studentID, self.subjectID)
 
 class Attendance(models.Model):
 	studentID = models.ForeignKey(Student)
@@ -23,7 +29,7 @@ class Attendance(models.Model):
 	dateOfAttendance = models.DateField()
 	timeAttendanceWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
 
-class DaysAttendaceWasTaken(models.Model):
+class DaysAttendanceWasTaken(models.Model):
 	subjectID = models.ForeignKey(Subject)
 	dateOfAttendance = models.DateField()
 	timeAttendanceWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
@@ -34,11 +40,15 @@ class Test(models.Model):
 	testType   = models.CharField(max_length=50)
 	dateOfTest = models.DateField()
 	timeTestWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
+	def __str__(self):
+		return '%s %s %s' % (self.subjectID, self.testType,self.dateOfTest)
 
 class Marks(models.Model):
 	studentID    = models.ForeignKey(Student)
 	miscDetails  = models.ForeignKey(Test)
 	studentMarks = models.CharField(max_length=10) # support for both grade and marks type. Not it is not an integer
+	class Meta:
+		unique_together = ('studentID', 'miscDetails','studentMarks') # is this neccessary?
 
 
 # Integrity Check at application level that the student is actually enrolled in that class    	

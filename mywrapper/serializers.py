@@ -1,40 +1,51 @@
 from rest_framework import serializers
-from mywrapper.models import Grade, Subject, Student, Teacher, Attendance,Notice
 from django.contrib.auth.models import User
+from mywrapper.models import Subject, Student, SubjectsPerStudent, Attendance,DaysAttendanceWasTaken,Test,Marks
 
-# class GradeSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Grade
-#         fields = ('fullGradeID', 'standardID', 'sectionID')
+class SubjectSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
+	class Meta:
+		model = Subject
+		fields = ('id','subjectID', 'sectionID')
 
-# class SubjectSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Subject
-#         fields = ('subjectID', 'fullgrade')
+class StudentSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
+	class Meta:
+		model = Student
+		fields = ('id','studentID')
 
-# class StudentSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Student
-#         fields = ('fullGradeID', 'studentID')
+class AttendanceSerializer(serializers.ModelSerializer):
+	dateOfAttendance = serializers.DateField(input_formats = ('%d/%m/%Y',))
+	class Meta:
+		model = Attendance
+		fields = ('studentID', 'subjectID', 'dateOfAttendance')
 
-# class TeacherSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Teacher
-#         fields = ('TeacherID', 'fullGrade')
+class DaysAttendanceWasTakenSerializer(serializers.ModelSerializer):
+	dateOfAttendance = serializers.DateField(input_formats = ('%d/%m/%Y',))
+	class Meta:
+		model = DaysAttendanceWasTaken
+		fields = ('subjectID', 'dateOfAttendance')
 
-# class AttendanceSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Attendance
-#         fields = ('fullgrade', 'studentID', 'dateOfAttendance')
+class TestSerializer(serializers.ModelSerializer):
+	dateOfTest = serializers.DateField(input_formats = ('%d/%m/%Y',))
+	class Meta:
+		model = Test
+		fields = ('subjectID','totalMarks','testType','dateOfTest')
 
-# class NoticeSerializer(serializers.ModelSerializer):
-#     owner = serializers.ReadOnlyField(source='owner.username')
-#     class Meta:
-#         model = Notice
-#         fields = ('category', 'message','classToSendNotice','owner')
+class MarksSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Marks
+		fields = ('studentID','studentMarks','miscDetails')
 
-# class UserSerializer(serializers.ModelSerializer):
-#     notice = serializers.PrimaryKeyRelatedField(many=True, queryset=Notice.objects.all())
-#     class Meta:
-#         model = User
-#         fields = ('id', 'username', 'notice')
+class SubjectsPerStudentSerializer(serializers.ModelSerializer):
+	studentID = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
+	subjectID = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
+	class Meta:
+		model = SubjectsPerStudent
+		fields = ('studentID','subjectID')
+
+class UserSerializer(serializers.ModelSerializer):
+	# notice = serializers.PrimaryKeyRelatedField(many=True, queryset=Notice.objects.all())
+	class Meta:
+		model = User
+		fields = ('id', 'username')

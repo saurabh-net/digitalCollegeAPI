@@ -3,12 +3,19 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from mywrapper import views
 
 urlpatterns = [
- #    url(r'^grade/$', views.GradeList.as_view()),
- #    url(r'^grade/(?P<pk>[0-9]+[A-Z])/$', views.GradeDetail.as_view()),
- #    url(r'^notice/$', views.NoticeList.as_view()),
- #    url(r'^notice/(?P<pk>[0-9]+)/$', views.NoticeDetail.as_view()),
- #    url(r'^users/$', views.UserList.as_view()),
-	# url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
+    url(r'^subject/$', views.SubjectList.as_view()),
+    url(r'^subject/(?P<pk>[0-9]+)/$', views.SubjectDetail.as_view()),
+    url(r'^student/$', views.StudentList.as_view()),
+    url(r'^subjectperstudent/$', views.SubjectsPerStudentList.as_view()),
+    url(r'^subjectperstudent/(?P<pk>[0-9]+)/$', views.SubjectsPerStudentDetail.as_view()),
+    url(r'^attendance/$', views.AttendanceList.as_view()),
+    url(r'^attendance/(?P<pk>[0-9]+)/$', views.AttendanceDetail.as_view()),
+    url(r'^daysattendancewastaken/$', views.DaysAttendanceWasTakenList.as_view()),
+    url(r'^daysattendancewastaken/(?P<pk>[0-9]+)/$', views.DaysAttendanceWasTakenDetail.as_view()),
+    url(r'^test/$', views.TestList.as_view()),
+    url(r'^test/(?P<pk>[0-9]+)/$', views.TestDetail.as_view()),
+    url(r'^marks/$', views.MarksList.as_view()),
+    url(r'^marks/(?P<pk>[0-9]+)/$', views.MarksDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
