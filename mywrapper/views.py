@@ -9,32 +9,32 @@ from django.contrib.auth.models import User
 from rest_framework import permissions
 
 
-class GradeList(generics.ListCreateAPIView):
-    queryset = Grade.objects.all()
-    serializer_class = GradeSerializer
+# class GradeList(generics.ListCreateAPIView):
+#     queryset = Grade.objects.all()
+#     serializer_class = GradeSerializer
 
 
-class GradeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Grade.objects.all()
-    serializer_class = GradeSerializer
+# class GradeDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Grade.objects.all()
+#     serializer_class = GradeSerializer
 
-class NoticeList(generics.ListCreateAPIView):
-    queryset = Notice.objects.all()
-    serializer_class = NoticeSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    def perform_create(self, serializer):
-    	serializer.save(owner=self.request.user)
+# class NoticeList(generics.ListCreateAPIView):
+#     queryset = Notice.objects.all()
+#     serializer_class = NoticeSerializer
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#     def perform_create(self, serializer):
+#     	serializer.save(owner=self.request.user)
 
 
-class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Notice.objects.all()
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = NoticeSerializer
+# class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Notice.objects.all()
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)a
+#     serializer_class = NoticeSerializer
 
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# class UserList(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# class UserDetail(generics.RetrieveAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
