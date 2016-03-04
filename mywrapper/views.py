@@ -7,6 +7,9 @@ from rest_framework import generics
 # from mywrapper.serializers import UserSerializer
 from django.contrib.auth.models import User
 from rest_framework import permissions
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class SubjectList(generics.ListCreateAPIView):
@@ -88,6 +91,32 @@ class DaysAttendanceWasTakenList(generics.ListCreateAPIView):
 class DaysAttendanceWasTakenDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DaysAttendanceWasTaken.objects.all()
     serializer_class = DaysAttendanceWasTakenSerializer
+
+@api_view(['GET'])
+def getteachersubjects(request,pk):
+    if request.method == 'GET':
+        teacher = Teacher(id=pk)
+        subjects = SubjectsPerTeacher.objects.filter(teacher=teacher)
+        # subjects = SubjectsPerTeacher.objects.all()
+        serializer = SubjectsPerTeacherSerializer(subjects,many="True")
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def getstudentlistforcomponent(request,pk):
+    if request.method == 'GET':
+        subjectComponents = SubjectComponents(id=pk)
+        students = SubjectsPerStudent.objects.filter(subjectComponents=subjectComponents)
+        serializer = SubjectsPerStudentSerializer(students,many="True") # Can use a cleaner serializer
+        return Response(serializer.data)
+
+@api_view(['GET','POST'])
+def sendabsentstudents(request):
+    if request.method == 'POST':
+        print request.data
+        return Response(status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 
 # class NoticeList(generics.ListCreateAPIView):
 #     queryset = Notice.objects.all()

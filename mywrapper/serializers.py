@@ -28,47 +28,53 @@ class TeacherSerializer(serializers.ModelSerializer):
 		fields = ('id','teacherID')
 
 class SubjectsPerTeacherSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
 	teacher = serializers.PrimaryKeyRelatedField(queryset=Teacher.objects.all())
 	subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
 	class Meta:
 		model = SubjectsPerTeacher
-		fields = ('teacher','subjectComponents')
+		fields = ('id','teacher','subjectComponents')
 
 class SubjectsPerStudentSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
 	student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
 	subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
 	class Meta:
 		model = SubjectsPerStudent
-		fields = ('student','subjectComponents')
+		fields = ('id','student','subjectComponents')
 
 class AttendanceSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
 	student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
 	subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
 	dateOfAttendance = serializers.DateField(input_formats = ('%d/%m/%Y',))
 	class Meta:
 		model = Attendance
-		fields = ('student', 'subjectComponents', 'dateOfAttendance')
+		fields = ('id','student', 'subjectComponents', 'dateOfAttendance')
 
 class DaysAttendanceWasTakenSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
 	dateOfAttendance = serializers.DateField(input_formats = ('%d/%m/%Y',))
 	subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
 	class Meta:
 		model = DaysAttendanceWasTaken
-		fields = ('subjectComponents', 'dateOfAttendance')
+		fields = ('id','subjectComponents', 'dateOfAttendance')
 
 class TestSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
 	subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
 	dateOfTest = serializers.DateField(input_formats = ('%d/%m/%Y',))
 	class Meta:
 		model = Test
-		fields = ('subjectComponents','totalMarks','testType','dateOfTest')
+		fields = ('id','subjectComponents','totalMarks','testType','dateOfTest')
 
 class MarksSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
 	test = serializers.PrimaryKeyRelatedField(queryset=Test.objects.all())
 	student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
 	class Meta:
 		model = Marks
-		fields = ('student','test','studentMarks')
+		fields = ('id','student','test','studentMarks')
 
 class UserSerializer(serializers.ModelSerializer):
 	# notice = serializers.PrimaryKeyRelatedField(many=True, queryset=Notice.objects.all())
