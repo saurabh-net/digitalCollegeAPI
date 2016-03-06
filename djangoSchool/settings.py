@@ -42,7 +42,8 @@ INSTALLED_APPS = (
 	'marks',
 	'accounts',
 	'mywrapper',
-	'rest_framework'
+	'rest_framework',
+	'rest_framework_swagger'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -139,4 +140,24 @@ FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGE_SIZE': 10
+}
+
+SWAGGER_SETTINGS = {
+    'exclude_namespaces': [],
+    'api_version': '0.1',
+    # 'api_path': '/',
+    'enabled_methods': [
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete'
+    ],
+    'api_key': '',
+    'is_authenticated': True,
+    'is_superuser': True,
+    'unauthenticated_user': 'django.contrib.auth.models.AnonymousUser',
+    'permission_denied_handler': None,
+    'resource_access_handler': None,
+    'doc_expansion': 'none',
 }
