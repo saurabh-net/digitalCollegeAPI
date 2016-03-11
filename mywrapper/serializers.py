@@ -15,7 +15,20 @@ class SubjectComponentsSerializer(serializers.ModelSerializer):
 		model = SubjectComponents
 		fields = ('id','subject','sectionID','componentID')
 
+class ReadSubjectComponentsSerializer(serializers.ModelSerializer):
+	subject = SubjectSerializer(read_only=True)
+	id = serializers.ReadOnlyField()
+	class Meta:
+		model = SubjectComponents
+		fields = ('id','subject','sectionID','componentID')
+
 class StudentSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
+	class Meta:
+		model = Student
+		fields = ('id','studentID')
+
+class ReadStudentSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Student
@@ -35,6 +48,15 @@ class SubjectsPerTeacherSerializer(serializers.ModelSerializer):
 		model = SubjectsPerTeacher
 		fields = ('id','teacher','subjectComponents')
 
+class ReadSubjectsPerTeacherSerializer(serializers.ModelSerializer):
+	# id = serializers.ReadOnlyField()
+	# teacher = serializers.PrimaryKeyRelatedField(queryset=Teacher.objects.all())
+	# subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
+	subjectComponents = ReadSubjectComponentsSerializer(read_only=True)
+	class Meta:
+		model = SubjectsPerTeacher
+		fields = ('subjectComponents',)
+
 class SubjectsPerStudentSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
@@ -43,14 +65,20 @@ class SubjectsPerStudentSerializer(serializers.ModelSerializer):
 		model = SubjectsPerStudent
 		fields = ('id','student','subjectComponents')
 
-class AttendanceSerializer(serializers.ModelSerializer):
-	id = serializers.ReadOnlyField()
-	student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
-	subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
-	dateOfAttendance = serializers.DateField(input_formats = ('%d/%m/%Y',))
+class ReadSubjectsPerStudentSerializer(serializers.ModelSerializer):
+	student = ReadStudentSerializer(read_only=True)
 	class Meta:
-		model = Attendance
-		fields = ('id','student', 'subjectComponents', 'dateOfAttendance')
+		model = SubjectsPerStudent
+		fields = ('student',)
+
+# class AttendanceSerializer(serializers.ModelSerializer):
+# 	id = serializers.ReadOnlyField()
+# 	student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
+# 	subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
+# 	dateOfAttendance = serializers.DateField(input_formats = ('%d/%m/%Y',))
+# 	class Meta:
+# 		model = Attendance
+# 		fields = ('id','student', 'subjectComponents', 'dateOfAttendance')
 
 class DaysAttendanceWasTakenSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
@@ -59,6 +87,14 @@ class DaysAttendanceWasTakenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = DaysAttendanceWasTaken
 		fields = ('id','subjectComponents', 'dateOfAttendance')
+
+class AttendanceSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
+	student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
+	dayAttendanceWasTaken = serializers.PrimaryKeyRelatedField(queryset=DaysAttendanceWasTaken.objects.all())
+	class Meta:
+		model = Attendance
+		fields = ('id','student', 'dayAttendanceWasTaken')
 
 class TestSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()

@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^marks/(?P<pk>[0-9]+)/$', views.MarksDetail.as_view()),
     url(r'^getteachersubjects/(?P<pk>[0-9]+)/$', views.getteachersubjects),
     url(r'^getstudentlistforcomponent/(?P<pk>[0-9]+)/$', views.getstudentlistforcomponent),
-    url(r'^sendabsentstudents/$', views.sendabsentstudents),
+    url(r'^postabsentstudents/$', views.postabsentstudents),
 
 ]
 

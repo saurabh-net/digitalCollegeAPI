@@ -38,16 +38,22 @@ class SubjectsPerStudent(models.Model):
 	def __str__(self):
 		return '%s %s' % (self.student, self.subjectComponents) # Might need to change
 
-class Attendance(models.Model):
-	student = models.ForeignKey(Student)
-	subjectComponents = models.ForeignKey(SubjectComponents)
-	dateOfAttendance = models.DateField()
-	timeAttendanceWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
+# class Attendance(models.Model):
+# 	student = models.ForeignKey(Student)
+# 	subjectComponents = models.ForeignKey(SubjectComponents)
+# 	dateOfAttendance = models.DateField()
+# 	timeAttendanceWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
 
 class DaysAttendanceWasTaken(models.Model):
 	subjectComponents = models.ForeignKey(SubjectComponents)
 	dateOfAttendance = models.DateField()
 	timeAttendanceWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
+	class Meta:
+		unique_together = ('subjectComponents', 'dateOfAttendance')
+
+class Attendance(models.Model):
+	student = models.ForeignKey(Student)
+	dayAttendanceWasTaken = models.ForeignKey(DaysAttendanceWasTaken)
 
 class Test(models.Model):
 	subjectComponents  = models.ForeignKey(SubjectComponents)
