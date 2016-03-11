@@ -1,13 +1,12 @@
 from django.db import models
 # from model_utils.managers import PassThroughManager
 # Create your models here.
-# This is without generalizing the sections! 
-# Do a model with them generalized as well
 
 class Subject(models.Model):
-	subjectID = models.CharField(max_length=50)
+	subjectID = models.CharField(max_length=50,unique=True)
 	def __str__(self):
 		return '%s' % (self.subjectID)
+
 
 class SubjectComponents(models.Model):
 	subject = models.ForeignKey(Subject)
@@ -15,6 +14,8 @@ class SubjectComponents(models.Model):
 	componentID = models.CharField(max_length=50) #Make choices?
 	def __str__(self):
 		return '%s %s %s' % (self.subject,self.sectionID,self.componentID)
+	class Meta:
+		unique_together = ('subject', 'sectionID','componentID')
 
 class Student(models.Model):
 	studentID = models.CharField(unique=True,max_length=50)
@@ -31,12 +32,16 @@ class SubjectsPerTeacher(models.Model):
 	subjectComponents = models.ForeignKey(SubjectComponents)
 	def __str__(self):
 		return '%s %s' % (self.teacher, self.subjectComponents) # Might need to change
+	class Meta:
+		unique_together = ('teacher', 'subjectComponents')
 
 class SubjectsPerStudent(models.Model):
 	student = models.ForeignKey(Student)
 	subjectComponents = models.ForeignKey(SubjectComponents)
 	def __str__(self):
 		return '%s %s' % (self.student, self.subjectComponents) # Might need to change
+	class Meta:
+		unique_together = ('subjectComponents', 'student')
 
 # class Attendance(models.Model):
 # 	student = models.ForeignKey(Student)
@@ -54,6 +59,8 @@ class DaysAttendanceWasTaken(models.Model):
 class Attendance(models.Model):
 	student = models.ForeignKey(Student)
 	dayAttendanceWasTaken = models.ForeignKey(DaysAttendanceWasTaken)
+	class Meta:
+		unique_together = ('student', 'dayAttendanceWasTaken')
 
 class Test(models.Model):
 	subjectComponents  = models.ForeignKey(SubjectComponents)
@@ -63,13 +70,15 @@ class Test(models.Model):
 	timeTestWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
 	def __str__(self):
 		return '%s %s %s' % (self.subjectComponents, self.testType,self.dateOfTest)
+	class Meta:
+		unique_together = ('subjectComponents', 'totalMarks','testType','dateOfTest')
 
 class Marks(models.Model):
 	student      = models.ForeignKey(Student)
 	test         = models.ForeignKey(Test)
 	studentMarks = models.CharField(max_length=10) # support for both grade and marks type. Not it is not an integer
-	# class Meta:
-	# 	unique_together = ('studentID', 'miscDetails','studentMarks') # is this neccessary?
+	class Meta:
+		unique_together = ('studentID', 'miscDetails','studentMarks') # is this neccessary?
 
 
 
