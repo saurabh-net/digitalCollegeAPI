@@ -80,32 +80,3 @@ class Marks(models.Model):
 	class Meta:
 		unique_together = ('student', 'test','studentMarks') # is this neccessary?
 
-
-
-# Integrity Check at application level that the student is actually enrolled in that class    	
-
-# class Notice(models.Model):
-# 	category = models.CharField(max_length=50)
-# 	message = models.CharField(max_length=800)
-# 	timeNoticeWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
-# 	classToSendNotice = models.ForeignKey(Grade) # It is the fully qualified class, e.g. 5A
-# 	owner = models.ForeignKey('auth.User')
-
-# TO DO: Marks | Service Layer
-
-
-
-
-
-# class TodoQuerySet(models.query.QuerySet):
-#     def incomplete(self):
-#         return self.filter(is_done=False)
-
-#     def high_priority(self):
-#         return self.filter(priority=1)
-
-# class Todo(models.Model):
-#     content = models.CharField(max_length=100)
-#     # other fields go here..
-
-#     objects = PassThroughManager.for_queryset_class(TodoQuerySet)()
