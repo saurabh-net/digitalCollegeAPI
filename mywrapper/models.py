@@ -76,9 +76,9 @@ class Test(models.Model):
 class Marks(models.Model):
 	student      = models.ForeignKey(Student)
 	test         = models.ForeignKey(Test)
-	studentMarks = models.CharField(max_length=10) # support for both grade and marks type. Not it is not an integer
+	studentMarks = models.CharField(max_length=50) # support for both grade and marks type. Not it is not an integer
 	class Meta:
-		unique_together = ('studentID', 'miscDetails','studentMarks') # is this neccessary?
+		unique_together = ('student', 'test','studentMarks') # is this neccessary?
 
 
 
