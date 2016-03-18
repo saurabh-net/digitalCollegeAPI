@@ -167,10 +167,13 @@ def postabsentstudents(request):
 	"""
 	if request.method == 'POST':
 		print request.data
-		subjectComponents = SubjectComponents(pk=request.data['subjectcomponent'])
-		date = datetime.datetime.strptime(request.data['date'], '%d/%m/%Y').strftime('%Y-%m-%d')
-		daysAttendanceWasTaken = DaysAttendanceWasTaken(subjectComponents=subjectComponents, dateOfAttendance=date)
-		daysAttendanceWasTaken.save()
+		try:
+			subjectComponents = SubjectComponents(pk=request.data['subjectcomponent'])
+			date = datetime.datetime.strptime(request.data['date'], '%d/%m/%Y').strftime('%Y-%m-%d')
+			daysAttendanceWasTaken = DaysAttendanceWasTaken(subjectComponents=subjectComponents, dateOfAttendance=date)
+			daysAttendanceWasTaken.save()
+		except:
+			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
 		for studentid in request.data['students']:
 			student = Student(pk=studentid)
 			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
