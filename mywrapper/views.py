@@ -178,7 +178,7 @@ def postabsentstudents(request):
 			student = Student(pk=studentid)
 			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
 			attendance.save()
-		return Response(status=status.HTTP_201_CREATED)
+		return Response({'id': 1 ,'status': 'success'},status=status.HTTP_201_CREATED)
 	# return Response(status=status.HTTP_400_BAD_REQUEST)
 
 	if request.method == 'PUT':
