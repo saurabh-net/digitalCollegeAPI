@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from django.conf.global_settings import DATE_INPUT_FORMATS
+import datetime
 
 DATE_INPUT_FORMATS += ('%d/%m/%Y', )
 
@@ -43,7 +44,7 @@ INSTALLED_APPS = (
 	'accounts',
 	'mywrapper',
 	'rest_framework',
-	'rest_framework_swagger'
+	'rest_framework_swagger',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -138,8 +139,16 @@ FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
 						"django_excel.TemporaryExcelFileUploadHandler")
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
-    'PAGE_SIZE': 10
+    'DEFAULT_PERMISSION_CLASSES': (
+    	# 'rest_framework.permissions.AllowAny',
+    	'rest_framework.permissions.IsAuthenticated',
+    	),
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.BasicAuthentication',
+    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+	),
 }
 
 SWAGGER_SETTINGS = {
@@ -160,4 +169,18 @@ SWAGGER_SETTINGS = {
     'permission_denied_handler': None,
     'resource_access_handler': None,
     'doc_expansion': 'none',
+}
+
+JWT_AUTH = {
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365),
+    'JWT_AUDIENCE': None,
+    'JWT_ISSUER': None,
+
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=365),
+
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }

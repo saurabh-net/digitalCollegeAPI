@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 # from model_utils.managers import PassThroughManager
 # Create your models here.
 
@@ -80,3 +81,9 @@ class Marks(models.Model):
 	class Meta:
 		unique_together = ('student', 'test','studentMarks') # is this neccessary?
 
+class Profile(models.Model):
+    user = models.OneToOneField(User)
+    # department = models.CharField(max_length=200, default='Computer Science')
+    is_teacher = models.BooleanField(default=False)
+    is_student = models.BooleanField(default=True)
+    is_administrator = models.BooleanField(default=False)

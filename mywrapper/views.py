@@ -14,7 +14,45 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import authentication_classes
+from rest_framework.decorators import permission_classes
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework import permissions
+from mywrapper.models import Profile
 
+class IsTeacher(permissions.BasePermission):
+	"""
+	Global permission check for whether the user is a teacher
+	"""
+
+	def has_permission(self, request, view):
+		if request.method in permissions.SAFE_METHODS:
+			return True
+		try:
+			user = request.user
+			profile = Profile.objects.get(user=user)
+		except: 
+			return False    
+		if profile.is_teacher == True or profile.is_administrator == True:
+			return True
+		return False
+
+class IsAdministrator(permissions.BasePermission):
+	"""
+	Global permission check for whether the user is a teacher
+	"""
+
+	def has_permission(self, request, view):
+		if request.method in permissions.SAFE_METHODS:
+			return True
+		try:
+			user = request.user
+			profile = Profile.objects.get(user=user)
+		except: 
+			return False    
+		if profile.is_administrator == True:
+			return True
+		return False
 
 class SubjectList(generics.ListCreateAPIView):
 	queryset = Subject.objects.all()
@@ -97,15 +135,16 @@ class DaysAttendanceWasTakenDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = DaysAttendanceWasTakenSerializer
 
 @api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication,])
 def getteachersubjects(request,pk):
 	if request.method == 'GET':
 		teacher = Teacher(id=pk)
 		subjects = SubjectsPerTeacher.objects.filter(teacher=teacher)
-		# subjects = SubjectsPerTeacher.objects.all()
 		serializer = ReadSubjectsPerTeacherSerializer(subjects,many="True")
 		return Response(serializer.data)
 
 @api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication,])
 def getstudentlistforcomponent(request,pk):
 	if request.method == 'GET':
 		subjectComponents = SubjectComponents(id=pk)
@@ -113,8 +152,9 @@ def getstudentlistforcomponent(request,pk):
 		serializer = ReadSubjectsPerStudentSerializer(students,many="True") # Can use a cleaner serializer
 		return Response(serializer.data)
 
-@csrf_exempt
 @api_view(['GET','POST','PUT'])
+@authentication_classes([JSONWebTokenAuthentication,])
+@permission_classes((IsTeacher, ))
 def postabsentstudents(request):
 	"""
 	JSON Example
