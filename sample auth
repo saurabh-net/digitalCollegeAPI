@@ -1,7 +1,16 @@
-curl -X POST -H "Content-Type: application/json" -d '{"username":"admin","password":"bits"}' http://127.0.0.1:8000/api-token-auth/
+curl -X POST -H "Content-Type: application/json" -d '{"username":"admin","password":"bits"}' http://digitalcollege.herokuapp.com/api-token-auth/
 
 curl -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwib3JpZ19pYXQiOjE0NTgxNDg3NDYsInVzZXJfaWQiOjEsImVtYWlsIjoiIiwiZXhwIjoxNDg5Njg0NzQ2fQ.5qrv_mX4QY0v10GVYtj2bhxPaR8msw_sP_-_YFc9lKs" http://127.0.0.1:8000/myapi/getstudentlistforcomponent/1/
 
 curl -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwib3JpZ19pYXQiOjE0NTgxNDg3NDYsInVzZXJfaWQiOjEsImVtYWlsIjoiIiwiZXhwIjoxNDg5Njg0NzQ2fQ.5qrv_mX4QY0v10GVYtj2bhxPaR8msw_sP_-_YFc9lKs" http://127.0.0.1:8000/myapi/postabsentstudents/1/
 
 
+
+
+
+
+curl -H "Authorization:JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6IiIsInVzZXJfaWQiOjEsImV4cCI6MTQ4OTg1NTkzNSwib3JpZ19pYXQiOjE0NTgzMTk5MzUsInVzZXJuYW1lIjoiYWRtaW4ifQ.1a__Barq3wkzCLt83v2eEq_JTJMgJ_zV2-P6o3LxLgI" http://digitalcollege.herokuapp.com/myapi/getstudentlistforcomponent/1/
+
+curl -H "Authorization:JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6IiIsInVzZXJfaWQiOjEsImV4cCI6MTQ4OTg1NTkzNSwib3JpZ19pYXQiOjE0NTgzMTk5MzUsInVzZXJuYW1lIjoiYWRtaW4ifQ.1a__Barq3wkzCLt83v2eEq_JTJMgJ_zV2-P6o3LxLgI" http://digitalcollege.herokuapp.com/myapi/postabsentstudents/1/
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6IiIsInVzZXJfaWQiOjEsImV4cCI6MTQ4OTg1NTkzNSwib3JpZ19pYXQiOjE0NTgzMTk5MzUsInVzZXJuYW1lIjoiYWRtaW4ifQ.1a__Barq3wkzCLt83v2eEq_JTJMgJ_zV2-P6o3LxLgI

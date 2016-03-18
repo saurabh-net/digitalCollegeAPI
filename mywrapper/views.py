@@ -154,7 +154,7 @@ def getstudentlistforcomponent(request,pk):
 
 @api_view(['GET','POST','PUT'])
 @authentication_classes([JSONWebTokenAuthentication,])
-@permission_classes((IsTeacher, ))
+# @permission_classes((IsTeacher, ))
 def postabsentstudents(request):
 	"""
 	JSON Example
@@ -199,7 +199,7 @@ def postabsentstudents(request):
 			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
 			attendance.save()
 		return Response(status=status.HTTP_201_CREATED)
-	return Response(status=status.HTTP_400_BAD_REQUEST)
+	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 
 # class NoticeList(generics.ListCreateAPIView):
 #     queryset = Notice.objects.all()
