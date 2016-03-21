@@ -2,11 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -32,10 +34,24 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Profile',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('is_teacher', models.BooleanField(default=False)),
+                ('is_student', models.BooleanField(default=True)),
+                ('is_administrator', models.BooleanField(default=False)),
+                ('student_teacher_id', models.CharField(unique=True, max_length=50)),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Student',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('studentID', models.CharField(unique=True, max_length=50)),
+                ('studentFullName', models.CharField(max_length=100)),
+                ('phoneNumber', models.CharField(max_length=20)),
+                ('emailID', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
@@ -43,6 +59,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('subjectID', models.CharField(unique=True, max_length=50)),
+                ('subjectName', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
@@ -74,6 +91,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('teacherID', models.CharField(unique=True, max_length=50)),
+                ('teacherFullName', models.CharField(max_length=100)),
+                ('phoneNumber', models.CharField(max_length=20)),
+                ('emailID', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
@@ -81,7 +101,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('totalMarks', models.CharField(max_length=50)),
-                ('testType', models.CharField(max_length=50)),
+                ('testType', models.CharField(max_length=100)),
                 ('dateOfTest', models.DateField()),
                 ('timeTestWasMarked', models.DateTimeField(auto_now_add=True)),
                 ('subjectComponents', models.ForeignKey(to='mywrapper.SubjectComponents')),

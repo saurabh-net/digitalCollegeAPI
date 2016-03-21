@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
-# from model_utils.managers import PassThroughManager
-# Create your models here.
+
 
 class Subject(models.Model):
 	subjectID = models.CharField(max_length=50,unique=True)
+	subjectName = models.CharField(max_length=100)
 	def __str__(self):
 		return '%s' % (self.subjectID)
 
@@ -20,11 +20,17 @@ class SubjectComponents(models.Model):
 
 class Student(models.Model):
 	studentID = models.CharField(unique=True,max_length=50)
+	studentFullName = models.CharField(max_length=100)
+	phoneNumber = models.CharField(max_length=20)
+	emailID = models.CharField(max_length=100)
 	def __str__(self):
 		return '%s' % (self.studentID)
 
 class Teacher(models.Model):
 		teacherID = models.CharField(unique=True,max_length=50)
+		teacherFullName = models.CharField(max_length=100)
+		phoneNumber = models.CharField(max_length=20)
+		emailID = models.CharField(max_length=100)
 		def __str__(self):
 			return '%s' % (self.teacherID)
 
@@ -44,12 +50,6 @@ class SubjectsPerStudent(models.Model):
 	class Meta:
 		unique_together = ('subjectComponents', 'student')
 
-# class Attendance(models.Model):
-# 	student = models.ForeignKey(Student)
-# 	subjectComponents = models.ForeignKey(SubjectComponents)
-# 	dateOfAttendance = models.DateField()
-# 	timeAttendanceWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
-
 class DaysAttendanceWasTaken(models.Model):
 	subjectComponents = models.ForeignKey(SubjectComponents)
 	dateOfAttendance = models.DateField()
@@ -66,7 +66,7 @@ class Attendance(models.Model):
 class Test(models.Model):
 	subjectComponents  = models.ForeignKey(SubjectComponents)
 	totalMarks = models.CharField(max_length=50)
-	testType   = models.CharField(max_length=50)
+	testType   = models.CharField(max_length=100)
 	dateOfTest = models.DateField()
 	timeTestWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
 	def __str__(self):
@@ -87,3 +87,4 @@ class Profile(models.Model):
     is_teacher = models.BooleanField(default=False)
     is_student = models.BooleanField(default=True)
     is_administrator = models.BooleanField(default=False)
+    student_teacher_id = models.CharField(unique=True,max_length=50)

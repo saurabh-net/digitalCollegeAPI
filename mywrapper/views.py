@@ -137,6 +137,21 @@ class DaysAttendanceWasTakenDetail(generics.RetrieveUpdateDestroyAPIView):
 @api_view(['GET'])
 @authentication_classes([JSONWebTokenAuthentication,])
 def getteachersubjects(request,pk):
+	"""
+	[
+        {
+            "id": 1,
+            "teacher": 1,
+            "subjectComponents": 1
+        },
+        {
+            "id": 2,
+            "teacher": 1,
+            "subjectComponents": 2
+        }
+    ]
+
+	"""
 	if request.method == 'GET':
 		teacher = Teacher(id=pk)
 		subjects = SubjectsPerTeacher.objects.filter(teacher=teacher)
