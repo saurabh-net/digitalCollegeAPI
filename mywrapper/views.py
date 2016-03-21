@@ -17,6 +17,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import authentication_classes
 from rest_framework.decorators import permission_classes
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
 from rest_framework import permissions
 from mywrapper.models import Profile
 
@@ -134,8 +136,16 @@ class DaysAttendanceWasTakenDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = DaysAttendanceWasTaken.objects.all()
 	serializer_class = DaysAttendanceWasTakenSerializer
 
+class ProfileList(generics.ListCreateAPIView):
+	queryset = Profile.objects.all()
+	serializer_class = ProfileSerializer
+
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+	queryset = Profile.objects.all()
+	serializer_class = ProfileSerializer
+
 @api_view(['GET'])
-@authentication_classes([JSONWebTokenAuthentication,])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getteachersubjects(request,pk):
 	"""
 	[
@@ -159,7 +169,7 @@ def getteachersubjects(request,pk):
 		return Response(serializer.data)
 
 @api_view(['GET'])
-@authentication_classes([JSONWebTokenAuthentication,])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getstudentlistforcomponent(request,pk):
 	if request.method == 'GET':
 		subjectComponents = SubjectComponents(id=pk)
@@ -168,7 +178,7 @@ def getstudentlistforcomponent(request,pk):
 		return Response(serializer.data)
 
 @api_view(['GET','POST','PUT'])
-@authentication_classes([JSONWebTokenAuthentication,])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsTeacher, ))
 def postabsentstudents(request):
 	"""
@@ -232,10 +242,10 @@ def postabsentstudents(request):
 #     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)a
 #     serializer_class = NoticeSerializer
 
-# class UserList(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-# class UserDetail(generics.RetrieveAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

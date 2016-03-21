@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from mywrapper.models import Subject, SubjectComponents,Student,Teacher, SubjectsPerStudent,SubjectsPerTeacher, Attendance,DaysAttendanceWasTaken,Test,Marks
+from mywrapper.models import Subject, SubjectComponents,Student,Teacher, SubjectsPerStudent,SubjectsPerTeacher, Attendance,DaysAttendanceWasTaken,Test,Marks, Profile
 
 class SubjectSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Subject
-		fields = ('id','subjectID')
+		fields = ('id','subjectID','subjectName')
 
 class SubjectComponentsSerializer(serializers.ModelSerializer):
 	subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
@@ -26,19 +26,19 @@ class StudentSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Student
-		fields = ('id','studentID')
+		fields = ('id','studentID','studentFullName','phoneNumber','emailID')
 
 class ReadStudentSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Student
-		fields = ('id','studentID')
+		fields = ('id','studentID','studentFullName','phoneNumber','emailID')
 
 class TeacherSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Teacher
-		fields = ('id','teacherID')
+		fields = ('id','teacherID','teacherFullName','phoneNumber','emailID')
 
 class SubjectsPerTeacherSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
@@ -112,8 +112,15 @@ class MarksSerializer(serializers.ModelSerializer):
 		model = Marks
 		fields = ('id','student','test','studentMarks')
 
+class ProfileSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
+	class Meta:
+		model = Profile
+		fields = ('id','user','is_teacher','is_student','is_administrator','student_teacher_id')
+
 class UserSerializer(serializers.ModelSerializer):
 	# notice = serializers.PrimaryKeyRelatedField(many=True, queryset=Notice.objects.all())
+	profile = ProfileSerializer(read_only=True)
 	class Meta:
 		model = User
-		fields = ('id', 'username')
+		fields = ('id', 'username','profile')
