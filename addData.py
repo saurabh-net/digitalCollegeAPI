@@ -8,3 +8,4 @@ listOfStudents = ['Vedant_Dual', 'Braj_Mech', 'Pinto_ENI']
 for student in listOfStudents:
 	r = requests.post(url,headers=headers, data={'studentID':student})
 	print r.text
+	

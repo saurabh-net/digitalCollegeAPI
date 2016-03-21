@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Subject(models.Model):
 	subjectID = models.CharField(max_length=50,unique=True)
-	subjectName = models.CharField(max_length=100)
+	subjectName = models.CharField(max_length=100,default=None, blank=True)
 	def __str__(self):
 		return '%s' % (self.subjectID)
 
@@ -21,16 +21,16 @@ class SubjectComponents(models.Model):
 class Student(models.Model):
 	studentID = models.CharField(unique=True,max_length=50)
 	studentFullName = models.CharField(max_length=100)
-	phoneNumber = models.CharField(max_length=20)
-	emailID = models.CharField(max_length=100)
+	phoneNumber = models.CharField(max_length=20,default=None, blank=True)
+	emailID = models.CharField(max_length=100,default=None, blank=True)
 	def __str__(self):
 		return '%s' % (self.studentID)
 
 class Teacher(models.Model):
 		teacherID = models.CharField(unique=True,max_length=50)
 		teacherFullName = models.CharField(max_length=100)
-		phoneNumber = models.CharField(max_length=20)
-		emailID = models.CharField(max_length=100)
+		phoneNumber = models.CharField(max_length=20,default=None, blank=True)
+		emailID = models.CharField(max_length=100,default=None, blank=True)
 		def __str__(self):
 			return '%s' % (self.teacherID)
 
