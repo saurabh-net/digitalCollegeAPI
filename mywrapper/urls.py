@@ -35,6 +35,8 @@ urlpatterns = [
     url(r'^user/$', views.UserList.as_view()),
     url(r'^user/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
     url(r'^getallsubjects/$', views.getallsubjects),
+    url(r'^changepassword/$', views.changepassword),
+    url(r'^getattendanceforsubjectcomponent/(?P<pk>[0-9]+)/$', views.getattendanceforsubjectcomponent),
 
 ]
 

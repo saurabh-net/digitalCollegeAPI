@@ -174,7 +174,12 @@ def getstudentlistforcomponent(request,pk):
 	if request.method == 'GET':
 		subjectComponents = SubjectComponents(id=pk)
 		students = SubjectsPerStudent.objects.filter(subjectComponents=subjectComponents)
-		serializer = ReadSubjectsPerStudentSerializer(students,many="True") # Can use a cleaner serializer
+		ids = []
+		for student in students:
+			ids.append(student.student.id)
+		students2 = Student.objects.filter(id__in=ids)
+		# serializer = ReadSubjectsPerStudentSerializer(students,many="True") # Can use a cleaner serializer
+		serializer = ReadStudentSerializer(students2,many="True") # Can use a cleaner serializer
 		return Response(serializer.data)
 
 @api_view(['GET','POST','PUT'])
@@ -277,4 +282,63 @@ def getallsubjects(request):
 		subjects = Subject.objects.all()
 		serializer = DetailedSubjectSerializer(subjects, many=True)
 		return Response(serializer.data)
+	return Response({'id':-1 ,'status': 'Only GET request is supported'},status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+def changepassword(request):
+	"""
+
+	"""
+	if request.method == 'POST':
+		password = request.data['password']
+		confirm_password = request.data['confirm_password']
+		if password == confirm_password:
+			user = request.user
+			print 1
+			user.set_password(confirm_password)
+			print 2
+			user.save()
+			print 3
+		else:
+			return Response({'id':-1 ,'status': 'Passwords did not match.'},status=status.HTTP_400_BAD_REQUEST)
+		return Response({'id': 1 ,'status': 'success'},status=status.HTTP_201_CREATED)
+	return Response({'id':-1 ,'status': 'Only POST request is supported'},status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+def getattendanceforsubjectcomponent(request,pk):
+	"""
+
+	"""
+	if request.method == 'GET':
+		daysAttendanceWasTaken = DaysAttendanceWasTaken.objects.filter(subjectComponents=pk)
+		# print daysAttendanceWasTaken
+		ids = []
+		for item in daysAttendanceWasTaken:
+			ids.append(item.id)
+		absentStudents = Attendance.objects.filter(dayAttendanceWasTaken__in=ids)
+		students = SubjectsPerStudent.objects.filter(subjectComponents=pk)
+		dictionaryOfAllStudentAbsentDates = {}
+		listOfDaysAttendanceWasTaken = []
+		for day in daysAttendanceWasTaken:
+			date = day.dateOfAttendance
+			date = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%d/%m/%Y')
+			listOfDaysAttendanceWasTaken.append(date)
+		dictionaryOfAllStudentAbsentDates['allDaysAttendanceWasTaken'] = listOfDaysAttendanceWasTaken
+		tempDict = {}
+		for student in students:
+			ListOfStudentAbsentDates = []
+			for temp in absentStudents:
+				if temp.student ==  student.student:
+					date =  DaysAttendanceWasTaken.objects.get(id=temp.dayAttendanceWasTaken.id)
+					date = date.dateOfAttendance
+					date = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%d/%m/%Y')
+					ListOfStudentAbsentDates.append(date)
+			tempDict[ str(student.student) ] = ListOfStudentAbsentDates
+			# dictionaryOfAllStudentAbsentDates[ str(student.student) ] = ListOfStudentAbsentDates
+		dictionaryOfAllStudentAbsentDates['students'] = tempDict
+		print dictionaryOfAllStudentAbsentDates
+		return Response(dictionaryOfAllStudentAbsentDates,status=status.HTTP_201_CREATED)
 	return Response({'id':-1 ,'status': 'Only GET request is supported'},status=status.HTTP_400_BAD_REQUEST)
