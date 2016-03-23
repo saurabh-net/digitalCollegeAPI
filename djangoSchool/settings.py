@@ -152,9 +152,9 @@ REST_FRAMEWORK = {
 }
 
 SWAGGER_SETTINGS = {
-    'exclude_namespaces': [],
+    'exclude_namespaces': ['internal_apis',],
     'api_version': '0.1',
-    # 'api_path': '/',
+    # 'api_path': '/myapi',
     'enabled_methods': [
         'get',
         'post',

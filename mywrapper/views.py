@@ -149,17 +149,17 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 def getteachersubjects(request,pk):
 	"""
 	[
-        {
-            "id": 1,
-            "teacher": 1,
-            "subjectComponents": 1
-        },
-        {
-            "id": 2,
-            "teacher": 1,
-            "subjectComponents": 2
-        }
-    ]
+		{
+			"id": 1,
+			"teacher": 1,
+			"subjectComponents": 1
+		},
+		{
+			"id": 2,
+			"teacher": 1,
+			"subjectComponents": 2
+		}
+	]
 
 	"""
 	if request.method == 'GET':
@@ -229,23 +229,40 @@ def postabsentstudents(request):
 		return Response(status=status.HTTP_201_CREATED)
 	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 
-# class NoticeList(generics.ListCreateAPIView):
-#     queryset = Notice.objects.all()
-#     serializer_class = NoticeSerializer
-#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-#     def perform_create(self, serializer):
-#     	serializer.save(owner=self.request.user)
+
+@api_view(['GET','POST'])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+# @permission_classes((IsAdministrator, ))
+def addstudentaccount(request):
+	if request.method == 'POST':
+		try:
+			studentID = request.data['studentID']
+			studentName = request.data['studentFullName']
+			# studentPhoneNumber = request.data.get('studentPhoneNumber')
+			# studentEmailID = request.data.get('studentEmailID')
+			studentPhoneNumber = ''
+			studentEmailID = ''
+		except:
+			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
+		try:
+			if User.objects.filter(username=studentID).exists():
+				return Response({'id':-1, 'status': 'A student with this ID exists'},status=status.HTTP_400_BAD_REQUEST)
+			user = User.objects.create_user(studentID, studentEmailID, 'temp123')
+			print 'Hello 2'
+		except e :
+			print 'Hello 3'
+			return Response({'id':-1, 'status': repre(e)},status=status.HTTP_400_BAD_REQUEST)
+
+		profile = Profile(user=user,is_teacher=False,is_administrator=False,is_student=False, student_teacher_id = studentID)
+		profile.save()
+	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 
 
-# class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Notice.objects.all()
-#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)a
-#     serializer_class = NoticeSerializer
 
 class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
 
 class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
