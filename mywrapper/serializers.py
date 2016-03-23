@@ -15,12 +15,27 @@ class SubjectComponentsSerializer(serializers.ModelSerializer):
 		model = SubjectComponents
 		fields = ('id','subject','sectionID','componentID')
 
+
 class ReadSubjectComponentsSerializer(serializers.ModelSerializer):
 	subject = SubjectSerializer(read_only=True)
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = SubjectComponents
 		fields = ('id','subject','sectionID','componentID')
+
+class DetailedSubjectComponentsSerializer(serializers.ModelSerializer):
+	# subject = SubjectSerializer(read_only=True)
+	id = serializers.ReadOnlyField()
+	class Meta:
+		model = SubjectComponents
+		fields = ('id','sectionID','componentID')
+
+class DetailedSubjectSerializer(serializers.ModelSerializer):
+	subjectcomponents_set = DetailedSubjectComponentsSerializer(read_only=True,many=True)
+	id = serializers.ReadOnlyField()
+	class Meta:
+		model = Subject
+		fields = ('id','subjectID','subjectName', 'subjectcomponents_set')
 
 class StudentSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()

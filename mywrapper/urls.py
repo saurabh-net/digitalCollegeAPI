@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^profile/(?P<pk>[0-9]+)/$', views.ProfileDetail.as_view()),
     url(r'^user/$', views.UserList.as_view()),
     url(r'^user/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
+    url(r'^getallsubjects/$', views.getallsubjects),
 
 ]
 

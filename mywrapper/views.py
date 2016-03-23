@@ -266,3 +266,15 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+def getallsubjects(request):
+	"""
+
+	"""
+	if request.method == 'GET':
+		subjects = Subject.objects.all()
+		serializer = DetailedSubjectSerializer(subjects, many=True)
+		return Response(serializer.data)
+	return Response({'id':-1 ,'status': 'Only GET request is supported'},status=status.HTTP_400_BAD_REQUEST)
