@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import datetime
 from django.utils import timezone
+from django.core.mail import send_mail
  # Create your views here.
 # from mywrapper.models import Subject, SubjectComponents,Student,Teacher, SubjectsPerStudent,SubjectsPerTeacher, Attendance,DaysAttendanceWasTaken,Test,Marks
 # from mywrapper.serializers import SubjectSerializer, StudentSerializer, AttendanceSerializer,SubjectsPerStudentSerializer,TestSerializer, MarksSerializer,DaysAttendanceWasTakenSerializer,TeacherSerializer,SubjectsPerTeacherSerializer,SubjectComponentsSerializer
@@ -232,7 +233,6 @@ def postabsentstudents(request):
 		currentTime = timezone.now()
 		elapsedTime =  currentTime - daysAttendanceWasTaken.timeAttendanceWasMarked
 		if ((elapsedTime.total_seconds()/60) > 20000 ):
-			print "Too late!"
 			return Response({'id':-3 ,'status': 'Too much time has changed since this data was entered'},status=status.HTTP_400_BAD_REQUEST)
 
 		Attendance.objects.filter(dayAttendanceWasTaken=daysAttendanceWasTaken).delete()
@@ -248,6 +248,7 @@ def postabsentstudents(request):
 @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsAdministrator, ))
 def addstudentaccount(request):
+	send_mail('Is this mail being sent?', 'Hello, all the way from ', 'saurabhmaurya06@gmail.com', ['f2012055@pilani.bits-pilani.ac.in','vedantmishra1243@gmail.com'], fail_silently=False)
 	if request.method == 'POST':
 		try:
 			studentID = request.data['studentID']
