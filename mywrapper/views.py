@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 # from mywrapper.models import Subject, SubjectComponents,Student,Teacher, SubjectsPerStudent,SubjectsPerTeacher, Attendance,DaysAttendanceWasTaken,Test,Marks
 # from mywrapper.serializers import SubjectSerializer, StudentSerializer, AttendanceSerializer,SubjectsPerStudentSerializer,TestSerializer, MarksSerializer,DaysAttendanceWasTakenSerializer,TeacherSerializer,SubjectsPerTeacherSerializer,SubjectComponentsSerializer
 from mywrapper.serializers import *
+from calendar import timegm
 
 from rest_framework import generics
 # from mywrapper.serializers import UserSerializer
@@ -173,15 +174,18 @@ def getteachersubjects(request,pk):
 @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getstudentlistforcomponent(request,pk):
 	if request.method == 'GET':
-		subjectComponents = SubjectComponents(id=pk)
+		try:
+			subjectComponents = SubjectComponents.objects.get(id=pk)
+		except:
+			return Response({'id':-2 ,'status': 'No such subject component'},status=status.HTTP_400_BAD_REQUEST)	 
 		students = SubjectsPerStudent.objects.filter(subjectComponents=subjectComponents)
 		ids = []
 		for student in students:
 			ids.append(student.student.id)
 		students2 = Student.objects.filter(id__in=ids)
-		# serializer = ReadSubjectsPerStudentSerializer(students,many="True") # Can use a cleaner serializer
 		serializer = ReadStudentSerializer(students2,many="True") # Can use a cleaner serializer
 		return Response(serializer.data)
+	return Response({'id':-1 ,'status': 'Only GET requests are supported'},status=status.HTTP_400_BAD_REQUEST)	 
 
 @api_view(['GET','POST','PUT'])
 @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
@@ -197,7 +201,6 @@ def postabsentstudents(request):
 	}
 	"""
 	if request.method == 'POST':
-		print request.data
 		try:
 			subjectComponents = SubjectComponents(pk=request.data['subjectcomponent'])
 			date = datetime.datetime.strptime(request.data['date'], '%d/%m/%Y').strftime('%Y-%m-%d')
@@ -212,15 +215,14 @@ def postabsentstudents(request):
 		for studentid in request.data['students']:
 			student = Student(pk=studentid)
 			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
-		try:
-			attendance.save()
-		except IntegrityError: 
-			return Response({'id':-2, 'status': 'Attendance already exists for this date. Do you want to overwrite it?'},status=status.HTTP_400_BAD_REQUEST)
+			try:
+				attendance.save()
+			except IntegrityError: 
+				return Response({'id':-2, 'status': 'Attendance already exists for this date. Do you want to overwrite it?'},status=status.HTTP_400_BAD_REQUEST)
 		return Response({'id': 1 ,'status': 'success'},status=status.HTTP_201_CREATED)
 	# return Response(status=status.HTTP_400_BAD_REQUEST)
 
 	if request.method == 'PUT':
-		print request.data
 		try:
 			subjectComponents = SubjectComponents(pk=request.data['subjectcomponent'])
 			date = datetime.datetime.strptime(request.data['date'], '%d/%m/%Y').strftime('%Y-%m-%d')
@@ -263,9 +265,7 @@ def addstudentaccount(request):
 			if User.objects.filter(username=studentID).exists():
 				return Response({'id':-1, 'status': 'A student with this ID exists'},status=status.HTTP_400_BAD_REQUEST)
 			user = User.objects.create_user(studentID, studentEmailID, 'temp123')
-			print 'Hello 2'
 		except e :
-			print 'Hello 3'
 			return Response({'id':-1, 'status': repre(e)},status=status.HTTP_400_BAD_REQUEST)
 
 		profile = Profile(user=user,is_teacher=False,is_administrator=False,is_student=False, student_teacher_id = studentID)
@@ -306,11 +306,8 @@ def changepassword(request):
 		confirm_password = request.data['confirm_password']
 		if password == confirm_password:
 			user = request.user
-			print 1
 			user.set_password(confirm_password)
-			print 2
 			user.save()
-			print 3
 		else:
 			return Response({'id':-1 ,'status': 'Passwords did not match.'},status=status.HTTP_400_BAD_REQUEST)
 		return Response({'id': 1 ,'status': 'success'},status=status.HTTP_201_CREATED)
@@ -365,7 +362,7 @@ def getattendanceforstudent(request,pk):
 			student = Student.objects.get(id=pk)
 			subjectComponentsOfStudent = SubjectsPerStudent.objects.filter(student=student)
 		except:
-			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
+			return Response({'id':-2, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
 		# dictOfAllSubjectAttendance = {}
 		listOfAllSubjectAttendance = []
 		for item in subjectComponentsOfStudent:
@@ -400,3 +397,26 @@ def getattendanceforstudent(request,pk):
 			listOfAllSubjectAttendance.append(dictOfSingleSubject)
 		return Response(listOfAllSubjectAttendance,status=status.HTTP_201_CREATED)
 	return Response({'id':-1 ,'status': 'Only GET request is supported'},status=status.HTTP_400_BAD_REQUEST)
+
+
+def my_decode_handler(token):
+	options = {
+		'verify_exp': api_settings.JWT_VERIFY_EXPIRATION,
+	}
+	print 'I am being used!'
+	payload = jwt.decode(
+		token,
+		api_settings.JWT_SECRET_KEY,
+		api_settings.JWT_VERIFY,
+		options=options,
+		leeway=api_settings.JWT_LEEWAY,
+		audience=api_settings.JWT_AUDIENCE,
+		issuer=api_settings.JWT_ISSUER,
+		algorithms=[api_settings.JWT_ALGORITHM]
+	)
+	now = timegm(datetime.utcnow().utctimetuple())
+	if int(payload['iat']) < now:
+		msg = _('Signature has expired.')
+		raise serializers.ValidationError(msg)
+		return None
+	# return payload
