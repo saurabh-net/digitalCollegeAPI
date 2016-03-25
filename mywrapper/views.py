@@ -223,22 +223,24 @@ def postabsentstudents(request):
 		try:
 			subjectComponents = SubjectComponents(pk=request.data['subjectcomponent'])
 			date = datetime.datetime.strptime(request.data['date'], '%d/%m/%Y').strftime('%Y-%m-%d')
-			daysAttendanceWasTaken = DaysAttendanceWasTaken.objects.get(subjectComponents=subjectComponents, dateOfAttendance=date)
 		except:
 			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
+		try:
+			daysAttendanceWasTaken = DaysAttendanceWasTaken.objects.get(subjectComponents=subjectComponents, dateOfAttendance=date)
+		except:
+			return Response({'id':-2, 'status': 'Attendance does not already exist for this date. Add fresh attendance?'},status=status.HTTP_400_BAD_REQUEST)
 		currentTime = timezone.now()
 		elapsedTime =  currentTime - daysAttendanceWasTaken.timeAttendanceWasMarked
-		if ((elapsedTime.total_seconds()/60) > 2 ):
+		if ((elapsedTime.total_seconds()/60) > 20000 ):
 			print "Too late!"
-			return Response({'id':-1 ,'status': 'Too much time has changed since this data was entered'},status=status.HTTP_400_BAD_REQUEST)
-			
+			return Response({'id':-3 ,'status': 'Too much time has changed since this data was entered'},status=status.HTTP_400_BAD_REQUEST)
 
 		Attendance.objects.filter(dayAttendanceWasTaken=daysAttendanceWasTaken).delete()
 		for studentid in request.data['students']:
 			student = Student(pk=studentid)
 			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
 			attendance.save()
-		return Response(status=status.HTTP_201_CREATED)
+		return Response({'id': 1 ,'status': 'success'},status=status.HTTP_201_CREATED)
 	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -360,35 +362,37 @@ def getattendanceforstudent(request,pk):
 	if request.method == 'GET':
 		student = Student.objects.get(id=pk)
 		subjectComponentsOfStudent = SubjectsPerStudent.objects.filter(student=student)
-		dictOfAllStudentAttendance = {}
+		# dictOfAllSubjectAttendance = {}
+		listOfAllSubjectAttendance = []
 		for item in subjectComponentsOfStudent:
-			tempDict = {}
-
-		daysAttendanceWasTaken = DaysAttendanceWasTaken.objects.filter(subjectComponents=pk)
-		ids = []
-		for item in daysAttendanceWasTaken:
-			ids.append(item.id)
-		absentStudents = Attendance.objects.filter(dayAttendanceWasTaken__in=ids)
-		students = SubjectsPerStudent.objects.filter(subjectComponents=pk)
-		dictionaryOfAllStudentAbsentDates = {}
-		listOfDaysAttendanceWasTaken = []
-		for day in daysAttendanceWasTaken:
-			date = day.dateOfAttendance
-			date = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%d/%m/%Y')
-			listOfDaysAttendanceWasTaken.append(date)
-		dictionaryOfAllStudentAbsentDates['allDaysAttendanceWasTaken'] = listOfDaysAttendanceWasTaken
-		tempDict = {}
-		for student in students:
+			dictOfSingleSubject = {}
+			daysAttendanceWasTaken = DaysAttendanceWasTaken.objects.filter(subjectComponents=item.subjectComponents)
+			ids = []
+			for day in daysAttendanceWasTaken:
+				ids.append(day.id)
+			absentStudents = Attendance.objects.filter(dayAttendanceWasTaken__in=ids)
+			onlyThisStudent = absentStudents.filter(student=student)
+			listOfDaysAttendanceWasTaken = []
+			for day in daysAttendanceWasTaken:
+				date = day.dateOfAttendance
+				date = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%d/%m/%Y')
+				listOfDaysAttendanceWasTaken.append(date)
+			dictOfSingleSubject['allDaysAttendanceWasTaken'] = listOfDaysAttendanceWasTaken
 			ListOfStudentAbsentDates = []
-			for temp in absentStudents:
-				if temp.student ==  student.student:
-					date =  DaysAttendanceWasTaken.objects.get(id=temp.dayAttendanceWasTaken.id)
-					date = date.dateOfAttendance
-					date = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%d/%m/%Y')
-					ListOfStudentAbsentDates.append(date)
-			tempDict[ str(student.student) ] = ListOfStudentAbsentDates
-			# dictionaryOfAllStudentAbsentDates[ str(student.student) ] = ListOfStudentAbsentDates
-		dictionaryOfAllStudentAbsentDates['students'] = tempDict
-		print dictionaryOfAllStudentAbsentDates
-		return Response(dictionaryOfAllStudentAbsentDates,status=status.HTTP_201_CREATED)
+			for day in onlyThisStudent:
+				date =  DaysAttendanceWasTaken.objects.get(id=day.dayAttendanceWasTaken.id)
+				date = date.dateOfAttendance
+				date = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%d/%m/%Y')
+				ListOfStudentAbsentDates.append(date)
+			humanReadableInfo = {}
+			humanReadableInfo['subjectName'] = item.subjectComponents.subject.subjectName
+			humanReadableInfo['subjectID'] = item.subjectComponents.subject.subjectID
+			humanReadableInfo['componentID'] = item.subjectComponents.componentID
+			humanReadableInfo['sectionID'] = item.subjectComponents.sectionID
+
+			dictOfSingleSubject['student'] = ListOfStudentAbsentDates
+			dictOfSingleSubject['info'] = humanReadableInfo
+			# dictOfAllSubjectAttendance[item.subjectComponents.id] = dictOfSingleSubject
+			listOfAllSubjectAttendance.append(dictOfSingleSubject)
+		return Response(listOfAllSubjectAttendance,status=status.HTTP_201_CREATED)
 	return Response({'id':-1 ,'status': 'Only GET request is supported'},status=status.HTTP_400_BAD_REQUEST)
