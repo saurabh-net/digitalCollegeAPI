@@ -18,7 +18,7 @@ from rest_framework.decorators import authentication_classes
 from rest_framework.decorators import permission_classes
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-
+from django.db import IntegrityError
 from rest_framework import permissions
 from mywrapper.models import Profile
 
@@ -201,13 +201,20 @@ def postabsentstudents(request):
 			subjectComponents = SubjectComponents(pk=request.data['subjectcomponent'])
 			date = datetime.datetime.strptime(request.data['date'], '%d/%m/%Y').strftime('%Y-%m-%d')
 			daysAttendanceWasTaken = DaysAttendanceWasTaken(subjectComponents=subjectComponents, dateOfAttendance=date)
-			daysAttendanceWasTaken.save()
 		except:
 			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
+		try:	
+			daysAttendanceWasTaken.save()
+		except IntegrityError: 
+			return Response({'id':-2, 'status': 'Attendance already exists for this date. Do you want to overwrite it?'},status=status.HTTP_400_BAD_REQUEST)
+
 		for studentid in request.data['students']:
 			student = Student(pk=studentid)
 			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
+		try:
 			attendance.save()
+		except IntegrityError: 
+			return Response({'id':-2, 'status': 'Attendance already exists for this date. Do you want to overwrite it?'},status=status.HTTP_400_BAD_REQUEST)
 		return Response({'id': 1 ,'status': 'success'},status=status.HTTP_201_CREATED)
 	# return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -315,6 +322,49 @@ def getattendanceforsubjectcomponent(request,pk):
 	if request.method == 'GET':
 		daysAttendanceWasTaken = DaysAttendanceWasTaken.objects.filter(subjectComponents=pk)
 		# print daysAttendanceWasTaken
+		ids = []
+		for item in daysAttendanceWasTaken:
+			ids.append(item.id)
+		absentStudents = Attendance.objects.filter(dayAttendanceWasTaken__in=ids)
+		students = SubjectsPerStudent.objects.filter(subjectComponents=pk)
+		dictionaryOfAllStudentAbsentDates = {}
+		listOfDaysAttendanceWasTaken = []
+		for day in daysAttendanceWasTaken:
+			date = day.dateOfAttendance
+			date = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%d/%m/%Y')
+			listOfDaysAttendanceWasTaken.append(date)
+		dictionaryOfAllStudentAbsentDates['allDaysAttendanceWasTaken'] = listOfDaysAttendanceWasTaken
+		tempDict = {}
+		for student in students:
+			ListOfStudentAbsentDates = []
+			for temp in absentStudents:
+				if temp.student ==  student.student:
+					date =  DaysAttendanceWasTaken.objects.get(id=temp.dayAttendanceWasTaken.id)
+					date = date.dateOfAttendance
+					date = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%d/%m/%Y')
+					ListOfStudentAbsentDates.append(date)
+			tempDict[ str(student.student) ] = ListOfStudentAbsentDates
+			# dictionaryOfAllStudentAbsentDates[ str(student.student) ] = ListOfStudentAbsentDates
+		dictionaryOfAllStudentAbsentDates['students'] = tempDict
+		print dictionaryOfAllStudentAbsentDates
+		return Response(dictionaryOfAllStudentAbsentDates,status=status.HTTP_201_CREATED)
+	return Response({'id':-1 ,'status': 'Only GET request is supported'},status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+def getattendanceforstudent(request,pk):
+	"""
+	pk refers to the id of the student	
+	"""
+	if request.method == 'GET':
+		student = Student.objects.get(id=pk)
+		subjectComponentsOfStudent = SubjectsPerStudent.objects.filter(student=student)
+		dictOfAllStudentAttendance = {}
+		for item in subjectComponentsOfStudent:
+			tempDict = {}
+
+		daysAttendanceWasTaken = DaysAttendanceWasTaken.objects.filter(subjectComponents=pk)
 		ids = []
 		for item in daysAttendanceWasTaken:
 			ids.append(item.id)
