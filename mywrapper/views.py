@@ -248,7 +248,7 @@ def postabsentstudents(request):
 @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsAdministrator, ))
 def addstudentaccount(request):
-	send_mail('Is this mail being sent?', 'Hello, all the way from ', 'saurabhmaurya06@gmail.com', ['f2012055@pilani.bits-pilani.ac.in','vedantmishra1243@gmail.com'], fail_silently=False)
+	# send_mail('Is this mail being sent?', 'Hello, all the way from ', 'saurabhmaurya06@gmail.com', ['f2012055@pilani.bits-pilani.ac.in','vedantmishra1243@gmail.com'], fail_silently=False)
 	if request.method == 'POST':
 		try:
 			studentID = request.data['studentID']
@@ -361,8 +361,11 @@ def getattendanceforstudent(request,pk):
 	pk refers to the id of the student	
 	"""
 	if request.method == 'GET':
-		student = Student.objects.get(id=pk)
-		subjectComponentsOfStudent = SubjectsPerStudent.objects.filter(student=student)
+		try:
+			student = Student.objects.get(id=pk)
+			subjectComponentsOfStudent = SubjectsPerStudent.objects.filter(student=student)
+		except:
+			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
 		# dictOfAllSubjectAttendance = {}
 		listOfAllSubjectAttendance = []
 		for item in subjectComponentsOfStudent:
