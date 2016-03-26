@@ -17,6 +17,7 @@ class SubjectComponents(models.Model):
 		return '%s %s %s' % (self.subject,self.sectionID,self.componentID)
 	class Meta:
 		unique_together = ('subject', 'sectionID','componentID')
+		ordering = ['componentID', 'sectionID']
 
 class Student(models.Model):
 	studentID = models.CharField(unique=True,max_length=50)
@@ -88,3 +89,10 @@ class Profile(models.Model):
     is_student = models.BooleanField(default=True)
     is_administrator = models.BooleanField(default=False)
     student_teacher_id = models.CharField(unique=True,max_length=50)
+
+class Notice(models.Model):
+	category = models.CharField(max_length=50)
+	message = models.CharField(max_length=1000)
+	timeNoticeWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
+	classToSendNotice = models.ForeignKey(Subject) # It is the fully qualified class, e.g. 5A
+	owner = models.ForeignKey('auth.User')

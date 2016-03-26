@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from mywrapper.models import Subject, SubjectComponents,Student,Teacher, SubjectsPerStudent,SubjectsPerTeacher, Attendance,DaysAttendanceWasTaken,Test,Marks, Profile
+from mywrapper.models import Subject, SubjectComponents,Student,Teacher, SubjectsPerStudent,SubjectsPerTeacher, Attendance,DaysAttendanceWasTaken,Test,Marks, Profile, Notice
 
 class SubjectSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
@@ -139,3 +139,14 @@ class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = ('id', 'username','profile')
+
+class NoticeSerializer(serializers.ModelSerializer):
+	id = serializers.ReadOnlyField()
+	timeNoticeWasMarked = serializers.ReadOnlyField()
+	classToSendNotice = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
+	owner = serializers.ReadOnlyField(source='owner.username')
+	class Meta:
+		model = Notice
+		fields = ('id','message','classToSendNotice','owner','timeNoticeWasMarked')
+
+

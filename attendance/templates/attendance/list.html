@@ -3,7 +3,7 @@
 {% block title %}Select class to enter attendance for{% endblock %}
 
 {% block content %}
-<h1 class="page-header">Please pick a class from the list</h1>
+<h1 class="page-header">What subject would you like to see?</h1>
 <div class="list-group" id="myList">
 {% for classLink,className in zipped_data %}
 <!--   <a href="{% url 'attendance:enterAttendance' 'cNurseryA' %}" class="list-group-item">Nursery 'A'</a>
@@ -19,7 +19,6 @@
 <script type="text/javascript">
  $(document).ready(function(){
    {% if alert %}
-      //alert('The attendance data for {{classSection}} has been entered. Thank you!');
       swal("Attendance submitted!", "Data for {{classSection}} has been entered. Thank you!", "success")
    {% endif %}
  });

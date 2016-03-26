@@ -23,6 +23,10 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from django.db import IntegrityError
 from rest_framework import permissions
 from mywrapper.models import Profile
+import sendgrid
+
+sg = sendgrid.SendGridClient('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')
+
 
 class IsTeacher(permissions.BasePermission):
 	"""
@@ -145,6 +149,39 @@ class ProfileList(generics.ListCreateAPIView):
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Profile.objects.all()
 	serializer_class = ProfileSerializer
+
+class NoticeList(generics.ListCreateAPIView):
+	queryset = Notice.objects.all()
+	serializer_class = NoticeSerializer
+	def post(self, request, format=None):
+		try:
+			profile = Profile.objects.get(user=request.user)
+		except:
+			return Response({'id':-1 ,'status': 'No profile for current user'},status=status.HTTP_400_BAD_REQUEST)	
+		name = '[empty]'
+		try:
+			if profile.is_teacher == True or profile.is_administrator == True:
+				teacher = Teacher.objects.get(teacherID = profile.student_teacher_id)
+				name = teacher.teacherFullName
+			else:
+				student = Student.objects.get(studentID = profile.student_teacher_id)
+				name = student.studentFullName
+		except:
+			return Response({'id':-2 ,'status': 'No teacher/student for profile ID'},status=status.HTTP_400_BAD_REQUEST)	
+
+		signature = ' -- Message sent by ' + name
+		request.data['message'] = request.data['message'] + signature
+		serializer = NoticeSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save(owner=self.request.user)
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	# def perform_create(self, serializer):
+	# 	serializer.save(owner=self.request.user)
+
+class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
+	queryset = Notice.objects.all()
+	serializer_class = NoticeSerializer
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
