@@ -41,19 +41,19 @@ class StudentSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Student
-		fields = ('id','studentID','studentFullName','phoneNumber','emailID')
+		fields = ('id','studentID','studentFullName')
 
 class ReadStudentSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Student
-		fields = ('id','studentID','studentFullName','phoneNumber','emailID')
+		fields = ('id','studentID','studentFullName')
 
 class TeacherSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Teacher
-		fields = ('id','teacherID','teacherFullName','phoneNumber','emailID')
+		fields = ('id','teacherID','teacherFullName')
 
 class SubjectsPerTeacherSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
@@ -99,9 +99,10 @@ class DaysAttendanceWasTakenSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	dateOfAttendance = serializers.DateField(input_formats = ('%d/%m/%Y',))
 	subjectComponents = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
+	owner = serializers.ReadOnlyField(source='owner.username')
 	class Meta:
 		model = DaysAttendanceWasTaken
-		fields = ('id','subjectComponents', 'dateOfAttendance')
+		fields = ('id','subjectComponents', 'dateOfAttendance','owner')
 
 class AttendanceSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
@@ -131,7 +132,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	class Meta:
 		model = Profile
-		fields = ('id','user','is_teacher','is_student','is_administrator','student_teacher_id')
+		fields = ('id','user','is_teacher','is_student','is_administrator','student_teacher_id','phoneNumber','emailID','gcm_registration_id')
 
 class UserSerializer(serializers.ModelSerializer):
 	# notice = serializers.PrimaryKeyRelatedField(many=True, queryset=Notice.objects.all())

@@ -202,10 +202,14 @@ def getteachersubjects(request,pk):
 
 	"""
 	if request.method == 'GET':
-		teacher = Teacher(id=pk)
+		try:
+			teacher = Teacher.objects.get(id=pk)
+		except:
+			return Response({'id':-2, 'status': 'No such teacher'},status=status.HTTP_400_BAD_REQUEST)
 		subjects = SubjectsPerTeacher.objects.filter(teacher=teacher)
 		serializer = ReadSubjectsPerTeacherSerializer(subjects,many="True")
 		return Response(serializer.data)
+	return Response({'id':-1 ,'status': 'Only GET requests are supported'},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
@@ -251,7 +255,7 @@ def postabsentstudents(request):
 
 		for studentid in request.data['students']:
 			student = Student(pk=studentid)
-			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
+			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken, owner=request.user)
 			try:
 				attendance.save()
 			except IntegrityError: 

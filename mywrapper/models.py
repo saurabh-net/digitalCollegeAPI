@@ -22,18 +22,12 @@ class SubjectComponents(models.Model):
 class Student(models.Model):
 	studentID = models.CharField(unique=True,max_length=50)
 	studentFullName = models.CharField(max_length=100)
-	phoneNumber = models.CharField(max_length=20,default=None, blank=True, null=True)
-	emailID = models.CharField(max_length=100,default=None, blank=True, null=True)
-	gcm_registration_id = models.TextField(default=None, blank=True, null=True)
 	def __str__(self):
 		return '%s' % (self.studentID)
 
 class Teacher(models.Model):
 		teacherID = models.CharField(unique=True,max_length=50)
 		teacherFullName = models.CharField(max_length=100)
-		phoneNumber = models.CharField(max_length=20,default=None, blank=True, null=True)
-		emailID = models.CharField(max_length=100,default=None, blank=True, null=True)
-		gcm_registration_id = models.TextField(default=None, blank=True, null=True)
 		def __str__(self):
 			return '%s' % (self.teacherID)
 
@@ -57,6 +51,7 @@ class DaysAttendanceWasTaken(models.Model):
 	subjectComponents = models.ForeignKey(SubjectComponents)
 	dateOfAttendance = models.DateField()
 	timeAttendanceWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
+	owner = models.ForeignKey('auth.User')
 	class Meta:
 		unique_together = ('subjectComponents', 'dateOfAttendance')
 
@@ -72,6 +67,7 @@ class Test(models.Model):
 	testType   = models.CharField(max_length=100)
 	dateOfTest = models.DateField()
 	timeTestWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
+	owner = models.ForeignKey('auth.User')
 	def __str__(self):
 		return '%s %s %s' % (self.subjectComponents, self.testType,self.dateOfTest)
 	class Meta:
@@ -91,14 +87,16 @@ class Profile(models.Model):
 	is_student = models.BooleanField(default=True)
 	is_administrator = models.BooleanField(default=False)
 	student_teacher_id = models.CharField(unique=True,max_length=50)
+	phoneNumber = models.CharField(max_length=20,default=None, blank=True, null=True)
+	emailID = models.CharField(max_length=100,default=None, blank=True, null=True)
+	gcm_registration_id = models.TextField(default=None, blank=True, null=True)
 
 
 class Notice(models.Model):
 	category = models.CharField(max_length=50)
-	message = models.CharField(max_length=1000)
-	# message = models.TextField()
+	# message = models.CharField(max_length=1000)
+	message = models.TextField()
 	timeNoticeWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
-	# classToSendNotice = models.ForeignKey(Subject) # It is the fully qualified class, e.g. 5A
 	classToSendNotice = models.ForeignKey(SubjectComponents)
 	owner = models.ForeignKey('auth.User')
 	is_sms   = models.BooleanField(default=False)
