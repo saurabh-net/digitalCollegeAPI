@@ -45,6 +45,7 @@ INSTALLED_APPS = (
 	'mywrapper',
 	'rest_framework',
 	'rest_framework_swagger',
+	"push_notifications",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -203,8 +204,17 @@ SWAGGER_SETTINGS = {
     'doc_expansion': 'none',
 }
 
-
-
+PUSH_NOTIFICATIONS_SETTINGS = {
+        "GCM_API_KEY": "AIzaSyCrF44zlpRiYYMaNsowC4bx9ssmKq0fBdk",
+        "APNS_CERTIFICATE": "",
+}
 
 
 # AIzaSyCrF44zlpRiYYMaNsowC4bx9ssmKq0fBdk   | This is the GCM API
+
+# To do list
+# Notices 
+	# GCM
+	# REST API
+# Website
+# Token password

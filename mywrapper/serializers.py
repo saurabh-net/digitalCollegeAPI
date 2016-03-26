@@ -147,6 +147,6 @@ class NoticeSerializer(serializers.ModelSerializer):
 	owner = serializers.ReadOnlyField(source='owner.username')
 	class Meta:
 		model = Notice
-		fields = ('id','message','classToSendNotice','owner','timeNoticeWasMarked')
+		fields = ('id','message','classToSendNotice','owner','timeNoticeWasMarked','is_sms','is_push','is_email')
 
 

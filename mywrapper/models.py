@@ -24,6 +24,7 @@ class Student(models.Model):
 	studentFullName = models.CharField(max_length=100)
 	phoneNumber = models.CharField(max_length=20,default=None, blank=True, null=True)
 	emailID = models.CharField(max_length=100,default=None, blank=True, null=True)
+	gcm_registration_id = models.TextField(default=None, blank=True, null=True)
 	def __str__(self):
 		return '%s' % (self.studentID)
 
@@ -32,6 +33,7 @@ class Teacher(models.Model):
 		teacherFullName = models.CharField(max_length=100)
 		phoneNumber = models.CharField(max_length=20,default=None, blank=True, null=True)
 		emailID = models.CharField(max_length=100,default=None, blank=True, null=True)
+		gcm_registration_id = models.TextField(default=None, blank=True, null=True)
 		def __str__(self):
 			return '%s' % (self.teacherID)
 
@@ -83,16 +85,23 @@ class Marks(models.Model):
 		unique_together = ('student', 'test','studentMarks') # is this neccessary?
 
 class Profile(models.Model):
-    user = models.OneToOneField(User)
-    # department = models.CharField(max_length=200, default='Computer Science')
-    is_teacher = models.BooleanField(default=False)
-    is_student = models.BooleanField(default=True)
-    is_administrator = models.BooleanField(default=False)
-    student_teacher_id = models.CharField(unique=True,max_length=50)
+	user = models.OneToOneField(User)
+	# department = models.CharField(max_length=200, default='Computer Science')
+	is_teacher = models.BooleanField(default=False)
+	is_student = models.BooleanField(default=True)
+	is_administrator = models.BooleanField(default=False)
+	student_teacher_id = models.CharField(unique=True,max_length=50)
+
 
 class Notice(models.Model):
 	category = models.CharField(max_length=50)
 	message = models.CharField(max_length=1000)
+	# message = models.TextField()
 	timeNoticeWasMarked = models.DateTimeField(auto_now=False, auto_now_add=True)
-	classToSendNotice = models.ForeignKey(Subject) # It is the fully qualified class, e.g. 5A
+	# classToSendNotice = models.ForeignKey(Subject) # It is the fully qualified class, e.g. 5A
+	classToSendNotice = models.ForeignKey(SubjectComponents)
 	owner = models.ForeignKey('auth.User')
+	is_sms   = models.BooleanField(default=False)
+	is_email = models.BooleanField(default=False)
+	is_push  = models.BooleanField(default=False)
+

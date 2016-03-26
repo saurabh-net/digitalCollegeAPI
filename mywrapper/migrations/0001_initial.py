@@ -34,6 +34,18 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Notice',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('category', models.CharField(max_length=50)),
+                ('message', models.TextField()),
+                ('timeNoticeWasMarked', models.DateTimeField(auto_now_add=True)),
+                ('is_sms', models.BooleanField(default=False)),
+                ('is_email', models.BooleanField(default=False)),
+                ('is_push', models.BooleanField(default=False)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Profile',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -52,6 +64,7 @@ class Migration(migrations.Migration):
                 ('studentFullName', models.CharField(max_length=100)),
                 ('phoneNumber', models.CharField(default=None, max_length=20, null=True, blank=True)),
                 ('emailID', models.CharField(default=None, max_length=100, null=True, blank=True)),
+                ('gcm_registration_id', models.TextField(default=None, null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -70,6 +83,9 @@ class Migration(migrations.Migration):
                 ('componentID', models.CharField(max_length=50)),
                 ('subject', models.ForeignKey(to='mywrapper.Subject')),
             ],
+            options={
+                'ordering': ['componentID', 'sectionID'],
+            },
         ),
         migrations.CreateModel(
             name='SubjectsPerStudent',
@@ -94,6 +110,7 @@ class Migration(migrations.Migration):
                 ('teacherFullName', models.CharField(max_length=100)),
                 ('phoneNumber', models.CharField(default=None, max_length=20, null=True, blank=True)),
                 ('emailID', models.CharField(default=None, max_length=100, null=True, blank=True)),
+                ('gcm_registration_id', models.TextField(default=None, null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -111,6 +128,16 @@ class Migration(migrations.Migration):
             model_name='subjectsperteacher',
             name='teacher',
             field=models.ForeignKey(to='mywrapper.Teacher'),
+        ),
+        migrations.AddField(
+            model_name='notice',
+            name='classToSendNotice',
+            field=models.ForeignKey(to='mywrapper.SubjectComponents'),
+        ),
+        migrations.AddField(
+            model_name='notice',
+            name='owner',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='marks',
