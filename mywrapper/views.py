@@ -245,17 +245,17 @@ def postabsentstudents(request):
 		try:
 			subjectComponents = SubjectComponents(pk=request.data['subjectcomponent'])
 			date = datetime.datetime.strptime(request.data['date'], '%d/%m/%Y').strftime('%Y-%m-%d')
-			daysAttendanceWasTaken = DaysAttendanceWasTaken(subjectComponents=subjectComponents, dateOfAttendance=date)
+			daysAttendanceWasTaken = DaysAttendanceWasTaken(subjectComponents=subjectComponents, dateOfAttendance=date,owner=request.user)
 		except:
 			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
 		try:	
-			daysAttendanceWasTaken.save(owner=self.request.user)
+			daysAttendanceWasTaken.save()
 		except IntegrityError: 
 			return Response({'id':-2, 'status': 'Attendance already exists for this date. Do you want to overwrite it?'},status=status.HTTP_400_BAD_REQUEST)
 
 		for studentid in request.data['students']:
 			student = Student(pk=studentid)
-			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken, owner=request.user)
+			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
 			try:
 				attendance.save()
 			except IntegrityError: 
