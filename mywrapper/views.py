@@ -309,7 +309,7 @@ def addstudentaccount(request):
 		except e :
 			return Response({'id':-1, 'status': repre(e)},status=status.HTTP_400_BAD_REQUEST)
 
-		profile = Profile(user=user,is_teacher=False,is_administrator=False,is_student=True, student_teacher_id = studentID,)
+		profile = Profile(user=user,is_teacher=False,is_administrator=False,is_student=True, student_teacher_id = studentID,phoneNumber=studentPhoneNumber,emailID=studentEmailID,accept_tokens_after=)
 		profile.save()
 	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 
