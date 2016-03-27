@@ -249,7 +249,7 @@ def postabsentstudents(request):
 		except:
 			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
 		try:	
-			daysAttendanceWasTaken.save()
+			daysAttendanceWasTaken.save(owner=self.request.user)
 		except IntegrityError: 
 			return Response({'id':-2, 'status': 'Attendance already exists for this date. Do you want to overwrite it?'},status=status.HTTP_400_BAD_REQUEST)
 
