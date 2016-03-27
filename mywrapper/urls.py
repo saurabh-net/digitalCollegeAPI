@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^marks/$', views.MarksList.as_view()),
     url(r'^marks/(?P<pk>[0-9]+)/$', views.MarksDetail.as_view()),
     url(r'^addstudentaccount/$', views.addstudentaccount),
+    url(r'^addteacheraccount/$', views.addteacheraccount),
     url(r'^profile/$', views.ProfileList.as_view()),
     url(r'^profile/(?P<pk>[0-9]+)/$', views.ProfileDetail.as_view()),
     url(r'^user/$', views.UserList.as_view()),

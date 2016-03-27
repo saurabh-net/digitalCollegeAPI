@@ -314,6 +314,31 @@ def addstudentaccount(request):
 	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET','POST'])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+# @permission_classes((IsAdministrator, ))
+def addteacheraccount(request):
+	# send_mail('Is this mail being sent?', 'Hello, all the way from ', 'saurabhmaurya06@gmail.com', ['f2012055@pilani.bits-pilani.ac.in','vedantmishra1243@gmail.com'], fail_silently=False)
+	if request.method == 'POST':
+		try:
+			teacherID = request.data['teacherID']
+			teacherName = request.data['teacherFullName']
+			teacherPhoneNumber = request.data.get('teacherPhoneNumber')
+			teacherEmailID = request.data.get('teacherEmailID')
+		except:
+			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
+		try:
+			if User.objects.filter(username=teacherID).exists():
+				return Response({'id':-1, 'status': 'A teacher with this ID exists'},status=status.HTTP_400_BAD_REQUEST)
+			user = User.objects.create_user(teacherID, teacherEmailID, 'temp789')
+		except e :
+			return Response({'id':-1, 'status': repre(e)},status=status.HTTP_400_BAD_REQUEST)
+		profile = Profile(user=user,is_teacher=True,is_administrator=False,is_student=False, student_teacher_id = teacherID,phoneNumber=teacherPhoneNumber,emailID=teacherEmailID,accept_tokens_after=datetime.datetime.now())
+		profile.save()
+		return Response({'id':1, 'status': 'success'},status=status.HTTP_201_CREATED)
+	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class UserList(generics.ListAPIView):
 	queryset = User.objects.all()
