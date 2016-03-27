@@ -46,6 +46,7 @@ INSTALLED_APPS = (
 	'rest_framework',
 	'rest_framework_swagger',
 	"push_notifications",
+	'rest_framework_jwt',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -168,22 +169,6 @@ REST_FRAMEWORK = {
 	
 }
 
-
-JWT_AUTH = {
-    'JWT_VERIFY': False,
-    'JWT_VERIFY_EXPIRATION': False,
-    'JWT_LEEWAY': 0,
-    'JWT_EXPIRATION_DELTA' : datetime.timedelta(seconds=30000000),
-    'JWT_AUDIENCE': None,
-    'JWT_ISSUER': None,
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=365),
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
-    # 'JWT_DECODE_HANDLER':
-    # 'mywrapper.views.my_decode_handler',
-
-}
-
 SWAGGER_SETTINGS = {
     'exclude_namespaces': ['internal_apis',],
     'api_version': '0.1',
@@ -202,6 +187,21 @@ SWAGGER_SETTINGS = {
     'permission_denied_handler': None,
     'resource_access_handler': None,
     'doc_expansion': 'none',
+}
+
+JWT_AUTH = {
+    'JWT_VERIFY': False,
+    'JWT_VERIFY_EXPIRATION': False,
+    'JWT_LEEWAY': 0,
+    'JWT_EXPIRATION_DELTA' : datetime.timedelta(seconds=30000000),
+    'JWT_AUDIENCE': None,
+    'JWT_ISSUER': None,
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=365),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_DECODE_HANDLER':
+    'mywrapper.views.my_decode_handler',
+
 }
 
 PUSH_NOTIFICATIONS_SETTINGS = {

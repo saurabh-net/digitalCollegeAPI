@@ -308,9 +308,9 @@ def addstudentaccount(request):
 			user = User.objects.create_user(studentID, studentEmailID, 'temp123')
 		except e :
 			return Response({'id':-1, 'status': repre(e)},status=status.HTTP_400_BAD_REQUEST)
-
-		profile = Profile(user=user,is_teacher=False,is_administrator=False,is_student=True, student_teacher_id = studentID,phoneNumber=studentPhoneNumber,emailID=studentEmailID,accept_tokens_after=datetime.now())
+		profile = Profile(user=user,is_teacher=False,is_administrator=False,is_student=True, student_teacher_id = studentID,phoneNumber=studentPhoneNumber,emailID=studentEmailID,accept_tokens_after=datetime.datetime.now())
 		profile.save()
+		return Response({'id':1, 'status': 'success'},status=status.HTTP_201_CREATED)
 	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -460,4 +460,4 @@ def my_decode_handler(token):
 		msg = _('Signature has expired.')
 		raise serializers.ValidationError(msg)
 		return None
-	# return payload
+	return payload

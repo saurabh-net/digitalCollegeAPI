@@ -8,21 +8,21 @@ headers = {'Authorization': 'JWT '+token}
 listOfStudents = ['Vedant_Dual', 'Braj_Mech', 'Pinto_ENI','Saurabh_CS']
 listOfNames = ['Vedant Mishra', 'Braj Kishore', 'Dev Pinto','Saurabh Maurya']
 listOfEmails = ['vedant@gmail.com','braj@gmail.com','','saurabhmaurya06@gmail.com']
-listOfPhoneNumbers = ['8504005493','9031702359','9945149074']
+listOfPhoneNumbers = ['8504005493','9031702359','','9945149074']
 
 
 for i in range(4):
-	r = requests.post(url2,headers=headers, data={'studentID':listOfStudents[i],'studentFullName':listOfNames[i]})
+	r = requests.post(url2,headers=headers, data={'studentID':listOfStudents[i],'studentFullName':listOfNames[i],'studentPhoneNumber':listOfPhoneNumbers[i],'studentEmailID':listOfEmails[i]})
 	print r.text
 	r = requests.post(url,headers=headers, data={'studentID':listOfStudents[i],'studentFullName':listOfNames[i]})
 	print r.text
 
-url = 'http://127.0.0.1:8000/myapi/teacher/'	
-listOfTeacherIDs = ['Ricky_Schlum','Karwa_EY']
-listOfTeacherNames = ['Ricky Lakhar', 'Chaitanya Karwa']
-for i in range(2):
-	r = requests.post(url,headers=headers, data={'teacherID':listOfTeacherIDs[i],'teacherFullName':listOfTeacherNames[i]})
-	print r.text
+# url = 'http://127.0.0.1:8000/myapi/teacher/'	
+# listOfTeacherIDs = ['Ricky_Schlum','Karwa_EY']
+# listOfTeacherNames = ['Ricky Lakhar', 'Chaitanya Karwa']
+# for i in range(2):
+# 	r = requests.post(url,headers=headers, data={'teacherID':listOfTeacherIDs[i],'teacherFullName':listOfTeacherNames[i]})
+# 	print r.text
 
 # url = 'http://127.0.0.1:8000/myapi/subject/'	
 # url2 = 'http://127.0.0.1:8000/myapi/subjectcomponents/'
