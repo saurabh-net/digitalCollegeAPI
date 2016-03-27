@@ -5,11 +5,13 @@ token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwib3JpZ1
 url = 'http://127.0.0.1:8000/myapi/student/'
 url2 = 'http://127.0.0.1:8000/myapi/addstudentaccount/'
 headers = {'Authorization': 'JWT '+token}
-listOfStudents = ['Vedant_Dual', 'Braj_Mech', 'Pinto_ENI']
-listOfNames = ['Vedant Mishra', 'Braj Kishore', 'Dev Pinto']
+listOfStudents = ['Vedant_Dual', 'Braj_Mech', 'Pinto_ENI','Saurabh_CS']
+listOfNames = ['Vedant Mishra', 'Braj Kishore', 'Dev Pinto','Saurabh Maurya']
+listOfEmails = ['vedant@gmail.com','braj@gmail.com','','saurabhmaurya06@gmail.com']
+listOfPhoneNumbers = ['8504005493','9031702359','9945149074']
 
 
-for i in range(3):
+for i in range(4):
 	r = requests.post(url2,headers=headers, data={'studentID':listOfStudents[i],'studentFullName':listOfNames[i]})
 	print r.text
 	r = requests.post(url,headers=headers, data={'studentID':listOfStudents[i],'studentFullName':listOfNames[i]})

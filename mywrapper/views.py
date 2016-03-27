@@ -296,10 +296,10 @@ def addstudentaccount(request):
 		try:
 			studentID = request.data['studentID']
 			studentName = request.data['studentFullName']
-			# studentPhoneNumber = request.data.get('studentPhoneNumber')
-			# studentEmailID = request.data.get('studentEmailID')
-			studentPhoneNumber = ''
-			studentEmailID = ''
+			studentPhoneNumber = request.data.get('studentPhoneNumber')
+			studentEmailID = request.data.get('studentEmailID')
+			# studentPhoneNumber = ''
+			# studentEmailID = ''
 		except:
 			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
 		try:
@@ -309,7 +309,7 @@ def addstudentaccount(request):
 		except e :
 			return Response({'id':-1, 'status': repre(e)},status=status.HTTP_400_BAD_REQUEST)
 
-		profile = Profile(user=user,is_teacher=False,is_administrator=False,is_student=False, student_teacher_id = studentID)
+		profile = Profile(user=user,is_teacher=False,is_administrator=False,is_student=True, student_teacher_id = studentID)
 		profile.save()
 	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 

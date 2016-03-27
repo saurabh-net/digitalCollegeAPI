@@ -170,8 +170,8 @@ REST_FRAMEWORK = {
 
 
 JWT_AUTH = {
-    'JWT_VERIFY': False,
-    'JWT_VERIFY_EXPIRATION': False,
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
     'JWT_LEEWAY': 0,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365),
     'JWT_AUDIENCE': None,
