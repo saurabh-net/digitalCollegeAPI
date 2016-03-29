@@ -4,12 +4,10 @@ from django.utils import timezone
 from django.core.mail import send_mail
  # Create your views here.
 # from mywrapper.models import Subject, SubjectComponents,Student,Teacher, SubjectsPerStudent,SubjectsPerTeacher, Attendance,DaysAttendanceWasTaken,Test,Marks
-# from mywrapper.serializers import SubjectSerializer, StudentSerializer, AttendanceSerializer,SubjectsPerStudentSerializer,TestSerializer, MarksSerializer,DaysAttendanceWasTakenSerializer,TeacherSerializer,SubjectsPerTeacherSerializer,SubjectComponentsSerializer
 from mywrapper.serializers import *
 from calendar import timegm
 
 from rest_framework import generics
-# from mywrapper.serializers import UserSerializer
 from django.contrib.auth.models import User
 from rest_framework import permissions
 from rest_framework.decorators import api_view
@@ -24,6 +22,8 @@ from django.db import IntegrityError
 from rest_framework import permissions
 from mywrapper.models import Profile
 import sendgrid
+from .authentication import JWTAuthentication 
+from rest_framework.permissions import IsAuthenticated
 
 sg = sendgrid.SendGridClient('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')
 
@@ -145,19 +145,34 @@ class DaysAttendanceWasTakenDetail(generics.RetrieveUpdateDestroyAPIView):
 class ProfileList(generics.ListCreateAPIView):
 	queryset = Profile.objects.all()
 	serializer_class = ProfileSerializer
+	def perform_create(self, serializer):
+		serializer.save(accept_tokens_after=datetime.datetime.now())
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Profile.objects.all()
 	serializer_class = ProfileSerializer
 
-class NoticeList(generics.ListCreateAPIView):
-	queryset = Notice.objects.all()
-	serializer_class = NoticeSerializer
-	def post(self, request, format=None):
+
+@api_view(['GET','POST','PUT'])
+@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+# @permission_classes((IsTeacher, ))
+def postnotice(request):
+	"""
+	[{
+		"category": "General",
+		"message" : "Classes will be suspended on the 18th of April, 2016",
+		"subjectComponents": [1,2,3],
+		"is_sms": 1,
+		"is_email": 1,
+		"is_push": 0
+	}]
+	"""
+	if request.methsubjectComponentod == 'POST':
+		# request.data['message'] = "Hell"
 		try:
 			profile = Profile.objects.get(user=request.user)
 		except:
-			return Response({'id':-1 ,'status': 'No profile for current user'},status=status.HTTP_400_BAD_REQUEST)	
+			return Response({'id':-2 ,'status': 'No profile for current user'},status=status.HTTP_400_BAD_REQUEST)	
 		name = '[empty]'
 		try:
 			if profile.is_teacher == True or profile.is_administrator == True:
@@ -167,24 +182,62 @@ class NoticeList(generics.ListCreateAPIView):
 				student = Student.objects.get(studentID = profile.student_teacher_id)
 				name = student.studentFullName
 		except:
-			return Response({'id':-2 ,'status': 'No teacher/student for profile ID'},status=status.HTTP_400_BAD_REQUEST)	
+			return Response({'id':-3 ,'status': 'No teacher/student for profile ID'},status=status.HTTP_400_BAD_REQUEST)	
 
 		signature = ' -- Message sent by ' + name
 		request.data['message'] = request.data['message'] + signature
-		serializer = NoticeSerializer(data=request.data)
-		if serializer.is_valid():
-			serializer.save(owner=self.request.user)
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		studentsToPing = []
+		for subjectComponent in request.data['subjectComponents']:
+			dataToSave = {}
+			dataToSave['category'] = request.data['category']
+			dataToSave['message'] = request.data['message']
+			if request.data['is_sms'] == 1:
+				dataToSave['is_sms'] = True
+			else:
+				dataToSave['is_sms'] = False
+
+			if request.data['is_email'] == 1:
+				dataToSave['is_email'] = True
+			else:
+				dataToSave['is_email'] = False
+
+			if request.data['is_push'] == 1:
+				dataToSave['is_push'] = True
+			else:
+				dataToSave['is_push'] = False
+
+			# dataToSave['owner'] = request.user
+			try:
+				print int(subjectComponent)
+				sc = SubjectComponents.objects.get(id=int(subjectComponent))
+				print 'One'
+			except:
+				return Response({'id':-4 ,'status': 'No such subject component', 'value':subjectComponent},status=status.HTTP_400_BAD_REQUEST)
+			print 'Two'
+			# dataToSave['classToSendNotice'] = sc
+			dataToSave['classToSendNotice'] = int(subjectComponent)
+			print 'Three'
+			serializer = NoticeSerializer(data=dataToSave)
+			if serializer.is_valid():
+				serializer.save(owner=request.user)
+				# return Response(serializer.data, status=status.HTTP_201_CREATED)
+			# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	return Response({'id':-1 ,'status': 'Only POST request supported'},status=status.HTTP_400_BAD_REQUEST)
+
 	# def perform_create(self, serializer):
 	# 	serializer.save(owner=self.request.user)
+
+class NoticeList(generics.ListCreateAPIView):
+	queryset = Notice.objects.all()
+	serializer_class = NoticeSerializer
 
 class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Notice.objects.all()
 	serializer_class = NoticeSerializer
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JSONWebTokenAuthentication,])
+@permission_classes([IsAuthenticated,])
 def getteachersubjects(request,pk):
 	"""
 	[
@@ -481,8 +534,8 @@ def my_decode_handler(token):
 		algorithms=[api_settings.JWT_ALGORITHM]
 	)
 	now = timegm(datetime.utcnow().utctimetuple())
-	if int(payload['iat']) < now:
-		msg = _('Signature has expired.')
-		raise serializers.ValidationError(msg)
-		return None
-	return payload
+	# if int(payload['iat']) < now:
+	msg = _('Signature has expired.')
+	raise serializers.ValidationError(msg)
+	return None
+	# return payload

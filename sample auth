@@ -5,6 +5,10 @@ curl -X POST -H "Content-Type: application/json" -d '{"username":"admin","passwo
 
 curl -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwib3JpZ19pYXQiOjE0NTg3MTMyMjEsInVzZXJfaWQiOjEsImVtYWlsIjoiIiwiZXhwIjoxNDkwMjQ5MjIxfQ.dz07VRZV16ZNyL17sUHCBOufLCcxqtbCfYOEs2uiJpU" http://127.0.0.1:8000/myapi/getstudentlistforcomponent/1/
 
+curl -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwib3JpZ19pYXQiOjE0NTg3MTMyMjEsInVzZXJfaWQiOjEsImVtYWlsIjoiIiwiZXhwIjoxNDkwMjQ5MjIxfQ.dz07VRZV16ZNyL17sUHCBOufLCcxqtbCfYOEs2uiJpU" http://127.0.0.1:8000/myapi/getteachersubjects/1/
+
+curl http://127.0.0.1:8000/myapi/getteachersubjects/1/
+
 curl -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwib3JpZ19pYXQiOjE0NTgxNDg3NDYsInVzZXJfaWQiOjEsImVtYWlsIjoiIiwiZXhwIjoxNDg5Njg0NzQ2fQ.5qrv_mX4QY0v10GVYtj2bhxPaR8msw_sP_-_YFc9lKs" http://127.0.0.1:8000/myapi/postabsentstudents/1/
 
 

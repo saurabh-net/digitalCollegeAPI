@@ -144,10 +144,8 @@ class UserSerializer(serializers.ModelSerializer):
 class NoticeSerializer(serializers.ModelSerializer):
 	id = serializers.ReadOnlyField()
 	timeNoticeWasMarked = serializers.ReadOnlyField()
-	classToSendNotice = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
+	classToSendNotice = serializers.PrimaryKeyRelatedField(queryset=SubjectComponents.objects.all())
 	owner = serializers.ReadOnlyField(source='owner.username')
 	class Meta:
 		model = Notice
 		fields = ('id','message','classToSendNotice','owner','timeNoticeWasMarked','is_sms','is_push','is_email')
-
-

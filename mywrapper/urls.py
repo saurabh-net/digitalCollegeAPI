@@ -39,8 +39,10 @@ urlpatterns = [
     url(r'^changepassword/$', views.changepassword),
     url(r'^getattendanceforsubjectcomponent/(?P<pk>[0-9]+)/$', views.getattendanceforsubjectcomponent),
     url(r'^getattendanceforstudent/(?P<pk>[0-9]+)/$', views.getattendanceforstudent),
-    url(r'^notice/$', views.NoticeList.as_view()),
+    url(r'^postnotice/$', views.postnotice),
     url(r'^notice/(?P<pk>[0-9]+)/$', views.NoticeDetail.as_view()), 
+    url(r'^notice/$', views.NoticeList.as_view()), 
+    
 
 ]
 
