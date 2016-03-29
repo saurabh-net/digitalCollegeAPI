@@ -167,7 +167,7 @@ def postnotice(request):
 		"is_push": 0
 	}]
 	"""
-	if request.methsubjectComponentod == 'POST':
+	if request.method == 'POST':
 		# request.data['message'] = "Hell"
 		try:
 			profile = Profile.objects.get(user=request.user)
