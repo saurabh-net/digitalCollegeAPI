@@ -240,7 +240,7 @@ class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
 @api_view(['GET'])
 # @authentication_classes([JSONWebTokenAuthentication,])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
-@permission_classes([IsAuthenticated,])
+# @permission_classes([IsAuthenticated,])
 def getteachersubjects(request,pk):
 	"""
 	[

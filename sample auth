@@ -42,3 +42,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNDYwMTk
 
 
 curl -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNDYwMTk5MDU4fQ.cnU6F4tl_ezAXgOoDkMnvR-a2Dp7VtJGdEYYUSPNzE4" http://digitalcollege.herokuapp.com/myapi/getstudentlistforcomponent/5/
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNDkxMTQ5OTAzfQ.GkDW9QhCHWw5rDohvcG1XOatwMPUjk8iK5pxx5-qkZQ
+
+curl -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNDkxMTQ5OTAzfQ.GkDW9QhCHWw5rDohvcG1XOatwMPUjk8iK5pxx5-qkZQ" http://digitalcollege.herokuapp.com/myapi/getteachersubjects/1/

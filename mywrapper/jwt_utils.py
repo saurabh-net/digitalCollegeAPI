@@ -31,7 +31,7 @@ def jwt_payload_handler(user):
 		# 'email': user.email,
 		'username': username,
 		# 'exp': datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA,
-		'exp': datetime.utcnow() + dt.timedelta(days=7),
+		'exp': datetime.utcnow() + dt.timedelta(days=365),
 	}
 
 	payload[username_field] = username
