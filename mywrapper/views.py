@@ -156,6 +156,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 @api_view(['GET','POST','PUT'])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 # @permission_classes((IsTeacher, ))
 def postnotice(request):
 	"""
@@ -270,6 +271,7 @@ def getteachersubjects(request,pk):
 @api_view(['GET'])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 def getstudentlistforcomponent(request,pk):
 	if request.method == 'GET':
 		try:
@@ -287,6 +289,7 @@ def getstudentlistforcomponent(request,pk):
 
 @api_view(['GET','POST','PUT'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsTeacher, ))
 def postabsentstudents(request):
@@ -349,6 +352,7 @@ def postabsentstudents(request):
 
 @api_view(['GET','POST'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsAdministrator, ))
 def addstudentaccount(request):
@@ -377,6 +381,7 @@ def addstudentaccount(request):
 
 @api_view(['GET','POST'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsAdministrator, ))
 def addteacheraccount(request):
@@ -412,6 +417,7 @@ class UserDetail(generics.RetrieveAPIView):
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getallsubjects(request):
 	"""
@@ -426,6 +432,7 @@ def getallsubjects(request):
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def changepassword(request):
 	"""
@@ -445,6 +452,7 @@ def changepassword(request):
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getattendanceforsubjectcomponent(request,pk):
 	"""
@@ -484,6 +492,7 @@ def getattendanceforsubjectcomponent(request,pk):
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getattendanceforstudent(request,pk):
 	"""
