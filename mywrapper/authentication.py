@@ -3,7 +3,10 @@ import jwt_utils
 
 class JWTAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
+        # print 'Hello'
         JWToken = request.META.get('HTTP_JWTOKEN')
+        # print JWToken
+        # print request.META
         if not JWToken:
             return None
         try:
