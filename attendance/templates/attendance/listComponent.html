@@ -6,11 +6,9 @@
 <h1 class="page-header">What subject would you like to see?</h1>
 <div class="list-group" id="myList">
 {% for classLink,className in zipped_data %}
-<!--   <a href="{% url 'attendance:enterAttendance' 'cNurseryA' %}" class="list-group-item">Nursery 'A'</a>
-  <a href="{% url 'attendance:enterAttendance' 'c1A' %}" class="list-group-item">Class 1 'A'</a> -->
+
   <a href="{% url 'attendance:enterAttendance' classLink %}" class="list-group-item">{{className}}</a>
-<!--   <a href="{% url 'attendance:enterAttendance' 'c1C' %}" class="list-group-item">Class 1 'C'</a>
-  <a href="{% url 'attendance:enterAttendance' 'c1D' %}" class="list-group-item">Class 1 'D'</a> -->
+  
   {% endfor %}
 </div>
 {% endblock %}

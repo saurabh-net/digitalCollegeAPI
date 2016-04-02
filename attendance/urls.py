@@ -3,9 +3,8 @@ from . import views
 
 urlpatterns = [
 	url(r'^$',views.index,name='index'),
-	url(r'^viewAttendance/(?P<classSection>c[0-9]+[A-Z])/$', views.viewAttendance, name='viewAttendance'),
-	url(r'^viewAttendance/(?P<classSection>cNursery[A-Z])/$', views.viewAttendance, name='viewAttendance'),
-	url(r'^enterAttendance/(?P<classSection>c[0-9]+[A-Z])/$', views.enterAttendance, name='enterAttendance'),
-	url(r'^enterAttendance/(?P<classSection>cNursery[A-Z])/$', views.enterAttendance, name='enterAttendance'),
-	url(r'^uploadAttendance/(?P<classSection>cNursery[A-Z])/$', views.uploadAttendance, name='uploadAttendance'),
+	url(r'^selectComponent/(?P<pk>[0-9]+)/$',views.indexComponent,name='indexComponent'),
+	url(r'^viewAttendance/(?P<pk>[0-9]+)/$', views.viewAttendance, name='viewAttendance'),
+	url(r'^enterAttendance/(?P<pk>[0-9]+)/$', views.enterAttendance, name='enterAttendance'),
+	url(r'^uploadAttendance/(?P<pk>[0-9]+)/$', views.uploadAttendance, name='uploadAttendance'),
 ]

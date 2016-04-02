@@ -154,7 +154,8 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 @api_view(['GET','POST','PUT'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
 # @permission_classes((IsTeacher, ))
 def postnotice(request):
 	"""
@@ -222,6 +223,7 @@ def postnotice(request):
 				serializer.save(owner=request.user)
 				# return Response(serializer.data, status=status.HTTP_201_CREATED)
 			# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		return Response({'id':1 ,'status': 'success'},serializer.data, status=status.HTTP_201_CREATED)
 	return Response({'id':-1 ,'status': 'Only POST request supported'},status=status.HTTP_400_BAD_REQUEST)
 
 	# def perform_create(self, serializer):
@@ -236,7 +238,8 @@ class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = NoticeSerializer
 
 @api_view(['GET'])
-@authentication_classes([JSONWebTokenAuthentication,])
+# @authentication_classes([JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
 @permission_classes([IsAuthenticated,])
 def getteachersubjects(request,pk):
 	"""
@@ -265,7 +268,8 @@ def getteachersubjects(request,pk):
 	return Response({'id':-1 ,'status': 'Only GET requests are supported'},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
 def getstudentlistforcomponent(request,pk):
 	if request.method == 'GET':
 		try:
@@ -282,7 +286,8 @@ def getstudentlistforcomponent(request,pk):
 	return Response({'id':-1 ,'status': 'Only GET requests are supported'},status=status.HTTP_400_BAD_REQUEST)	 
 
 @api_view(['GET','POST','PUT'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsTeacher, ))
 def postabsentstudents(request):
 	"""
@@ -307,7 +312,9 @@ def postabsentstudents(request):
 			return Response({'id':-2, 'status': 'Attendance already exists for this date. Do you want to overwrite it?'},status=status.HTTP_400_BAD_REQUEST)
 
 		for studentid in request.data['students']:
-			student = Student(pk=studentid)
+			student = Student.objects.get(id=studentid)
+			# student = Student(pk=studentid)
+
 			attendance = Attendance(student=student,dayAttendanceWasTaken=daysAttendanceWasTaken)
 			try:
 				attendance.save()
@@ -341,7 +348,8 @@ def postabsentstudents(request):
 
 
 @api_view(['GET','POST'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsAdministrator, ))
 def addstudentaccount(request):
 	# send_mail('Is this mail being sent?', 'Hello, all the way from ', 'saurabhmaurya06@gmail.com', ['f2012055@pilani.bits-pilani.ac.in','vedantmishra1243@gmail.com'], fail_silently=False)
@@ -368,7 +376,8 @@ def addstudentaccount(request):
 
 
 @api_view(['GET','POST'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsAdministrator, ))
 def addteacheraccount(request):
 	# send_mail('Is this mail being sent?', 'Hello, all the way from ', 'saurabhmaurya06@gmail.com', ['f2012055@pilani.bits-pilani.ac.in','vedantmishra1243@gmail.com'], fail_silently=False)
@@ -402,7 +411,8 @@ class UserDetail(generics.RetrieveAPIView):
 	serializer_class = UserSerializer
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getallsubjects(request):
 	"""
 
@@ -415,7 +425,8 @@ def getallsubjects(request):
 
 
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def changepassword(request):
 	"""
 
@@ -433,7 +444,8 @@ def changepassword(request):
 	return Response({'id':-1 ,'status': 'Only POST request is supported'},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getattendanceforsubjectcomponent(request,pk):
 	"""
 
@@ -471,7 +483,8 @@ def getattendanceforsubjectcomponent(request,pk):
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+# @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 def getattendanceforstudent(request,pk):
 	"""
 	pk refers to the id of the student	
@@ -538,4 +551,4 @@ def my_decode_handler(token):
 	msg = _('Signature has expired.')
 	raise serializers.ValidationError(msg)
 	return None
-	# return payload
+	return payload

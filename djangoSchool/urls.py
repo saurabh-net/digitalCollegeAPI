@@ -18,6 +18,7 @@ from django.contrib import admin
 from . import views
 from django.contrib.auth.views import login, logout
 from rest_framework import routers
+from mywrapper.jwt_utils import get_token_with_password
 
 
 urlpatterns = [
@@ -31,6 +32,7 @@ urlpatterns = [
 	url(r'^myapi/', include('mywrapper.urls',namespace="mywrapper")),
 	url(r'^docs/', include('rest_framework_swagger.urls')),
 	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-	url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
-	url(r'^api-token-refresh/', 'rest_framework_jwt.views.refresh_jwt_token'),
+	url(r'^api-token-auth/', get_token_with_password),
+	# url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
+	# url(r'^api-token-refresh/', get_token_with_password),
 ]

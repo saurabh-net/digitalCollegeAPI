@@ -1,5 +1,5 @@
 {% extends 'attendance/base.html' %}
-{% block title %}Enter Attendance for {{neatSection}} {% endblock %}
+{% block title %}Enter Attendance for <!-- {{neatSection}} --> {% endblock %}
 
 {% block content %}
 <h1 class="page-header">{{neatSection}}</h1>
@@ -9,7 +9,6 @@
 
 <a href="{% url 'attendance:viewAttendance' classSection %}" class="btn btn-primary btn-block" role="button">View Attendance for this class</a>
 
-<!-- <a href="{% url 'attendance:viewAttendance' 'cNurseryA' %}" class="btn btn-primary btn-block" role="button">View Attendance for this class</a> -->
 
 </div>
 <hr>
@@ -29,11 +28,11 @@
     </thead>
     <tbody>
 
-{% for o in studentList %}
+{% for studentName,studentID,databaseID in studentList %}
 <tr>
-        <td><label>{{o}}</label></td>
+        <td><label>{{studentName}} | {{studentID}}</label></td>
         <td><div class="form-group">
-  			<input type="checkbox" name="{{o}}" data-toggle="toggle" data-on="Absent" data-off="Present" data-onstyle="danger" data-offstyle="success">
+  			<input type="checkbox" name="{{databaseID}}" data-toggle="toggle" data-on="Absent" data-off="Present" data-onstyle="danger" data-offstyle="success">
 		</div></td>
     </tr>
 {% endfor %}
