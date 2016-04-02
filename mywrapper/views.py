@@ -65,98 +65,143 @@ class IsAdministrator(permissions.BasePermission):
 class SubjectList(generics.ListCreateAPIView):
 	queryset = Subject.objects.all()
 	serializer_class = SubjectSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
+
 
 class SubjectDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Subject.objects.all()
 	serializer_class = SubjectSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class SubjectComponentsList(generics.ListCreateAPIView):
 	queryset = SubjectComponents.objects.all()
 	serializer_class = SubjectComponentsSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class SubjectComponentsDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = SubjectComponents.objects.all()
 	serializer_class = SubjectComponentsSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class SubjectsPerStudentList(generics.ListCreateAPIView):
 	queryset = SubjectsPerStudent.objects.all()
 	serializer_class = SubjectsPerStudentSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class SubjectsPerStudentDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = SubjectsPerStudent.objects.all()
 	serializer_class = SubjectsPerStudentSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class SubjectsPerTeacherList(generics.ListCreateAPIView):
 	queryset = SubjectsPerTeacher.objects.all()
 	serializer_class = SubjectsPerTeacherSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class SubjectsPerTeacherDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = SubjectsPerTeacher.objects.all()
 	serializer_class = SubjectsPerTeacherSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class StudentList(generics.ListCreateAPIView):
 	queryset = Student.objects.all()
 	serializer_class = StudentSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Student.objects.all()
 	serializer_class = StudentSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class TeacherList(generics.ListCreateAPIView):
 	queryset = Teacher.objects.all()
 	serializer_class = TeacherSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Teacher.objects.all()
 	serializer_class = TeacherSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class AttendanceList(generics.ListCreateAPIView):
 	queryset = Attendance.objects.all()
 	serializer_class = AttendanceSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class AttendanceDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Attendance.objects.all()
 	serializer_class = AttendanceSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class TestList(generics.ListCreateAPIView):
 	queryset = Test.objects.all()
 	serializer_class = TestSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class TestDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Test.objects.all()
 	serializer_class = TestSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class MarksList(generics.ListCreateAPIView):
 	queryset = Marks.objects.all()
 	serializer_class = MarksSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class MarksDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Marks.objects.all()
 	serializer_class = MarksSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class DaysAttendanceWasTakenList(generics.ListCreateAPIView):
 	queryset = DaysAttendanceWasTaken.objects.all()
 	serializer_class = DaysAttendanceWasTakenSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class DaysAttendanceWasTakenDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = DaysAttendanceWasTaken.objects.all()
 	serializer_class = DaysAttendanceWasTakenSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class ProfileList(generics.ListCreateAPIView):
 	queryset = Profile.objects.all()
 	serializer_class = ProfileSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 	def perform_create(self, serializer):
 		serializer.save(accept_tokens_after=datetime.datetime.now())
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Profile.objects.all()
 	serializer_class = ProfileSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 
 @api_view(['GET','POST','PUT'])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
-@permission_classes([IsAuthenticated,])
+@permission_classes([IsAuthenticated,IsTeacher])
 # @permission_classes((IsTeacher, ))
 def postnotice(request):
 	"""
@@ -233,6 +278,8 @@ def postnotice(request):
 class NoticeList(generics.ListCreateAPIView):
 	queryset = Notice.objects.all()
 	serializer_class = NoticeSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Notice.objects.all()
@@ -289,7 +336,7 @@ def getstudentlistforcomponent(request,pk):
 
 @api_view(['GET','POST','PUT'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
-@permission_classes([IsAuthenticated,])
+@permission_classes([IsAuthenticated,IsTeacher])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsTeacher, ))
 def postabsentstudents(request):
@@ -352,7 +399,7 @@ def postabsentstudents(request):
 
 @api_view(['GET','POST'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
-@permission_classes([IsAuthenticated,])
+@permission_classes([IsAuthenticated,IsTeacher])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsAdministrator, ))
 def addstudentaccount(request):
@@ -381,7 +428,7 @@ def addstudentaccount(request):
 
 @api_view(['GET','POST'])
 @authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
-@permission_classes([IsAuthenticated,])
+@permission_classes([IsAuthenticated,IsTeacher])
 # @authentication_classes([SessionAuthentication,BasicAuthentication,JSONWebTokenAuthentication,])
 # @permission_classes((IsAdministrator, ))
 def addteacheraccount(request):
