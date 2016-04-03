@@ -284,6 +284,8 @@ class NoticeList(generics.ListCreateAPIView):
 class NoticeDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Notice.objects.all()
 	serializer_class = NoticeSerializer
+	permission_classes = [IsAuthenticated,IsTeacher]
+	authentication_classes = [JWTAuthentication,SessionAuthentication,BasicAuthentication,]
 
 @api_view(['GET'])
 # @authentication_classes([JSONWebTokenAuthentication,])
@@ -608,3 +610,46 @@ def my_decode_handler(token):
 	raise serializers.ValidationError(msg)
 	return None
 	return payload
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication,SessionAuthentication,BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
+def getteacherdetails(request):
+	if request.method == 'GET':
+		try:
+			profile = Profile.objects.get(user=request.user)
+			teacher = Teacher.objects.get(teacherID=profile.student_teacher_id)
+		except:
+			return Response({'id':-2, 'status': 'User has no profile or Teacher does not exist'},status=status.HTTP_400_BAD_REQUEST)
+		teacherDetails = {}
+		teacherDetails['name'] = teacher.teacherFullName
+		teacherDetails['teacherID'] = teacher.teacherID 
+		return Response(teacherDetails,status=status.HTTP_201_CREATED)
+	return Response({'id':-1 ,'status': 'Only GET request is supported'},status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET','POST'])
+def resetpassword(request):
+	if request.method == 'POST':
+		try:
+			emailID = request.data['emailID']
+		except:
+			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
+		print reset_password(emailID,'saurabhmaurya06@gmail.com',request=request)
+		return Response({'id':1, 'status': 'success'},status=status.HTTP_201_CREATED)
+	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
+
+from django.contrib.auth.forms import PasswordResetForm
+
+def reset_password(email, from_email,request):
+	"""
+	Reset the password for all (active) users with given E-Mail adress
+	"""
+	form = PasswordResetForm({'email': email})
+	print 'hello 1'
+	if form.is_valid():
+		print 'hello 2'
+		return form.save(from_email=from_email,request=request,template='myapi/password_reset_email.html')
+		print 'hello 3'
+	print 'hello 4'

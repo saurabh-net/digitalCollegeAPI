@@ -42,8 +42,9 @@ urlpatterns = [
     url(r'^postnotice/$', views.postnotice),
     url(r'^notice/(?P<pk>[0-9]+)/$', views.NoticeDetail.as_view()), 
     url(r'^notice/$', views.NoticeList.as_view()), 
+    url(r'^getteacherdetails/$', views.getteacherdetails),
+    url(r'^resetpassword/$', views.resetpassword),
     
-
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
