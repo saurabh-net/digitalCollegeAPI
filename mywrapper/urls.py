@@ -44,6 +44,9 @@ urlpatterns = [
     url(r'^notice/$', views.NoticeList.as_view()), 
     url(r'^getteacherdetails/$', views.getteacherdetails),
     url(r'^resetpassword/$', views.resetpassword),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        'django.contrib.auth.views.password_reset_confirm',
+        name='reset'),
     
 ]
 

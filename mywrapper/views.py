@@ -631,12 +631,17 @@ def getteacherdetails(request):
 
 @api_view(['GET','POST'])
 def resetpassword(request):
+	"""
+	{
+		"emailID" :"saurabhmaurya06@gmail.com"
+	}
+	"""
 	if request.method == 'POST':
 		try:
 			emailID = request.data['emailID']
 		except:
 			return Response({'id':-1, 'status': 'inaccurate input parameters'},status=status.HTTP_400_BAD_REQUEST)
-		print reset_password(emailID,'saurabhmaurya06@gmail.com',request=request)
+		print reset_password(emailID,'webmaster@ptmnow.com',request=request)
 		return Response({'id':1, 'status': 'success'},status=status.HTTP_201_CREATED)
 	return Response({'id':-1 ,'status': 'GET request not supported'},status=status.HTTP_400_BAD_REQUEST)
 
@@ -650,6 +655,6 @@ def reset_password(email, from_email,request):
 	print 'hello 1'
 	if form.is_valid():
 		print 'hello 2'
-		return form.save(from_email=from_email,request=request,template='myapi/password_reset_email.html')
+		return form.save(from_email=from_email,request=request,email_template_name='registration/password_reset_email.html')
 		print 'hello 3'
 	print 'hello 4'

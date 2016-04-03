@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'mywrapper',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -42,7 +43,6 @@ INSTALLED_APPS = (
 	'notice',
 	'marks',
 	'accounts',
-	'mywrapper',
 	'rest_framework',
 	'rest_framework_swagger',
 	"push_notifications",
